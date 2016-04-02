@@ -15,6 +15,10 @@ private:
 public:
 	Server(void);
 	~Server(void);
+
+	static void* Server::onClientTalk(void *_args);
+
+	void Server::start();
 };
 
 #endif
