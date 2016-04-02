@@ -56,8 +56,6 @@ bool Logic::routeRequest(Player* player, std::string requestQuery) {
 
 	if(method.value == "getIdentity") {
 
-		ParsedEntity<std::string> pseudo = QueryUtils::getStringParsing(bufferedQuery);
-
 		getIdentityRequestQuery query;
 
 		query.sender = player;
@@ -129,19 +127,33 @@ bool Logic::routeRequest(Player* player, std::string requestQuery) {
 
 	}
 
-	else if(method.value == "setIdentity") {
+	else if(method.value == "...") {
 
 
-		ParsedEntity<std::string> pseudo = QueryUtils::getStringParsing(bufferedQuery);
+		ParsedEntity<int> MonAttributInt = QueryUtils::getIntParsing(bufferedQuery);
 
-		if(pseudo.key == "Pseudo" && QueryUtils::footerParsing(bufferedQuery)) {
+		if(MonAttributInt.error || MonAttributInt.key != "MonAttributInt" )
+			return false;
 
-			setIdentityRequestQuery query;
+		ParsedEntity<std::string> MonAttributString = QueryUtils::getStringParsing(bufferedQuery);
 
-			query.pseudo = pseudo.value;
+		if(MonAttributString.error || MonAttributString.key != "MonAttributString")
+			return false;
+
+
+		if(QueryUtils::footerParsing(bufferedQuery)) {
+
+			/*
+			maRequeteRequestQuery query;
+
+			query.MonAttributInt = MonAttributInt.value;
+			query.MonAttributString = MonAttributString.value;
+			
 			query.sender = player;
+			
+			Request::maRequete(this->server, query);
 
-			Request::setIdentity(this->server, query);
+			*/
 
 		}
 
