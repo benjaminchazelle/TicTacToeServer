@@ -117,3 +117,29 @@ ParsedEntity<std::vector<std::string>> QueryUtils::getPseudoPlayersParsing(std::
 void QueryUtils::nextLine(std::string &line) {
 
 };*/
+
+
+void QueryUtils::headerBuilding(std::string &response) {
+
+	response += "TICTACTOE/1.0\r\n";
+
+}
+
+void QueryUtils::setValue(std::string &response, std::string key, std::string value) {
+
+	response += key + ": " + value + "\r\n";
+
+}
+
+void QueryUtils::setErrors(std::string &response, std::vector<Error>) {
+
+	setValue(response, "ErrorCode", "test");
+	setValue(response, "ErrorMessage", "test2");
+
+}
+
+void QueryUtils::footerBuilding(std::string &response) {
+
+	response += "\r\n\r\n";
+
+}

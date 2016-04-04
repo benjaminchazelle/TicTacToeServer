@@ -19,6 +19,7 @@ struct ParsedEntity{
 	T value;
 };
 
+struct Error;
 
 
 class QueryUtils
@@ -34,6 +35,15 @@ public:
 	static ParsedEntity<int> getIntParsing(std::string &buffer);
 	static ParsedEntity<bool> getBoolParsing(std::string &buffer);
 	static ParsedEntity<std::vector<std::string>> getPseudoPlayersParsing(std::string &buffer);
+
+
+	static void headerBuilding(std::string &response);
+
+	static void setValue(std::string &response, std::string key, std::string value);
+
+	static void setErrors(std::string &response, std::vector<Error>);
+
+	static void footerBuilding(std::string &response);
 
 /*
 static RequestQuery parseRequest (Server* server, std::string query);

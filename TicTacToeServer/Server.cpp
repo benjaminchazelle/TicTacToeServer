@@ -303,8 +303,6 @@ void Server::start() {
 					//threadCollection.push_back(onClientTalkThread);
 
 					pthread_create(onClientTalkThread, NULL, Server::onClientTalk, args);
-
-					std::cout << "Echo message sent successfully from client #" << i << " : " << buffer << std::endl;
 				}
 			}
 		}
@@ -321,4 +319,20 @@ Server::~Server(void)
 
 
 
+bool Server::sendTo(std::string response, std::vector<Player*> clients) {
 
+	unsigned int len = strlen(response.c_str());
+
+	for(unsigned int i=0; i < clients.size(); i++) {
+	
+	if(send(clients.at(i)->getSocket(), response.c_str(), len, 0) < 0) {
+		perror("ERROR writing to socket");
+		exit(1);
+	}
+
+	}
+
+
+	return false;//dbg
+
+}

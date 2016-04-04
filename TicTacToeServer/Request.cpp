@@ -1,5 +1,5 @@
 #include "Query/Request.h"
-
+#include "Query/Response.h"
 
 #include <iostream>
 
@@ -18,7 +18,26 @@ void Request::setIdentity(Server* server, setIdentityRequestQuery query) {
 }
 
 void Request::getIdentity(Server* server, getIdentityRequestQuery query) {
-	std::cout << "*setIdentity" << std::endl;
+
+	getIdentityResponseQuery response;
+
+	std::vector<Player*> clientsTarget;
+	clientsTarget.push_back(query.sender);
+
+	std::vector<Error> errors;
+	Error ok_error;
+	ok_error.errorMessage = "heloo world";
+	ok_error.errorNumber = 462;
+	ok_error.errorType = 472;
+
+
+	response.clients = clientsTarget;
+	response.pseudo = query.sender->getName();
+	response.queryErrors = errors;
+
+	Response::getIdentity(server, response);
+
+	std::cout << "*getIdentity" << std::endl;
 }
 
 void Request::createMatch(Server* server, createMatchRequestQuery query) {

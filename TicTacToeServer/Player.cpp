@@ -32,7 +32,7 @@
 unsigned int Player::LastIDGiven = 0;
 
 
-Player::Player(int socket, sockaddr_in address) : clientSocket(socket), name(""), currentID(++LastIDGiven) {
+Player::Player(int socket, sockaddr_in address) : clientSocket(socket), name(""), connected(true), currentID(++LastIDGiven) {
 
 	std::stringstream name_stream;
 
@@ -115,4 +115,12 @@ bool Player::haveThisMatch(Match* match) {
 	}
 
 	return false;
+}
+
+void Player::disconnect() {
+	this->connected = false;
+}
+
+int Player::getSocket() {
+	return this->clientSocket;
 }

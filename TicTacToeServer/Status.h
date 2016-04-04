@@ -1,4 +1,4 @@
-enum status {
+enum Status {
 
 	STATUS_OK,
 

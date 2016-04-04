@@ -43,6 +43,7 @@
 
 
 class Logic;
+class Player;
 
 class Server
 {
@@ -59,6 +60,8 @@ public:
 	static void* Server::onClientTalk(void *_args);
 
 	void Server::start();
+
+	bool Server::sendTo(std::string response, std::vector<Player*> clients);
 };
 
 #endif

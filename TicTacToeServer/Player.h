@@ -61,6 +61,8 @@ private:
 
 	std::vector<Match*> matchesList;
 
+	bool connected;
+
 
 	int globalScore;
 
@@ -81,6 +83,10 @@ public:
 	void onMatchRemoved(Match* match);
 
 	bool haveThisMatch(Match* match);
+
+	void disconnect();
+
+	int getSocket();
 /*
 	*/
 };

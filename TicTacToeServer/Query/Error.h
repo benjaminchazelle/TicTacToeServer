@@ -8,6 +8,10 @@ struct Error {
 	int errorNumber;
 	std::string errorMessage;
 };
+/*
+class Errors {
+
+};*/
 
 
 #endif

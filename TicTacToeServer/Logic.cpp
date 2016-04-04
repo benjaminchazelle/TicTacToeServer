@@ -8,29 +8,29 @@
 
 #ifdef WIN32
 
-	#include <winsock2.h> 
-	#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)  
-	#define close(s) closesocket(s)
+#include <winsock2.h> 
+#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)  
+#define close(s) closesocket(s)
 
 #elif defined (linux) 
 
-	#include <sys/types.h>
-	#include <sys/socket.h>
-	#include <netinet/in.h>
-	#include <arpa/inet.h>
-	#include <unistd.h>
-	#include <netdb.h>
-	#define INVALID_SOCKET -1
-	#define SOCKET_ERROR -1
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <netdb.h>
+#define INVALID_SOCKET -1
+#define SOCKET_ERROR -1
 
-	typedef int SOCKET;
-	typedef struct sockaddr_in SOCKADDR_IN;
-	typedef struct sockaddr SOCKADDR;
-	typedef struct in_addr IN_ADDR;
+typedef int SOCKET;
+typedef struct sockaddr_in SOCKADDR_IN;
+typedef struct sockaddr SOCKADDR;
+typedef struct in_addr IN_ADDR;
 
 #else 
 
-	#error not defined for this platform
+#error not defined for this platform
 
 #endif
 
@@ -84,13 +84,19 @@ void Logic::addPlayer(int socket, sockaddr_in address) {
 
 void Logic::removePlayer(int socket){
 
-	this->playersList.erase(socket);
+	if(this->playersList[socket] != nullptr) {
+
+		this->playersList.at(socket)->disconnect();
+
+		this->playersList.erase(socket);
+	}
+
 
 }
 
 Player* Logic::getPlayer(int socket){
 
-	return this->playersList.at(socket);
+	return this->playersList[socket];
 
 }
 
@@ -117,7 +123,7 @@ bool Logic::routeRequest(Player* ClientPlayer, std::string requestQuery) {
 		query.sender = ClientPlayer;
 
 		Request::getIdentity(this->server, query);
-		
+
 
 	}
 	else if(method.value == "setIdentity") {
@@ -164,7 +170,7 @@ bool Logic::routeRequest(Player* ClientPlayer, std::string requestQuery) {
 		if( WinSize.error || WinSize.key != "WinSize")
 			return false;
 
-		
+
 
 		if(QueryUtils::footerParsing(bufferedQuery)) {
 
@@ -174,7 +180,7 @@ bool Logic::routeRequest(Player* ClientPlayer, std::string requestQuery) {
 			query.gridHeight = GridHeight.value;
 			query.playerList = PseudoPlayers.value;
 			query.winSize = WinSize.value;
-			
+
 			query.sender = ClientPlayer;
 
 			Request::createMatch(this->server, query);
@@ -211,9 +217,9 @@ bool Logic::routeRequest(Player* ClientPlayer, std::string requestQuery) {
 			getMatchInformationRequestQuery query;
 
 			query.match = match.value;
-			
+
 			query.sender = ClientPlayer;
-			
+
 			Request::getMatchInformation(this->server, query);
 
 		}
@@ -237,18 +243,18 @@ bool Logic::routeRequest(Player* ClientPlayer, std::string requestQuery) {
 
 		if (coordinate_y.error || coordinate_y.key != "coordinate_y")
 			return false;
-	
+
 
 
 		if (QueryUtils::footerParsing(bufferedQuery)) {
 
-			
+
 			playMatchRequestQuery query;
 
 			query.match = match.value;
 			query.coordinate_x = coordinate_x.value;
 			query.coordinate_y = coordinate_y.value;
-			
+
 			query.sender = ClientPlayer;
 
 			Request::playMatch(this->server, query);
@@ -286,7 +292,7 @@ bool Logic::routeRequest(Player* ClientPlayer, std::string requestQuery) {
 
 		if (match.error || match.key != "MonAttributInt")
 			return false;
-		
+
 		if (QueryUtils::footerParsing(bufferedQuery)) {
 
 			quitMatchRequestQuery query;
