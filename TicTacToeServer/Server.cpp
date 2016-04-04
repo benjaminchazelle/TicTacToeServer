@@ -44,43 +44,69 @@
 #define MAX_CLIENTS 30	 
 #define MAXDATASIZE 1024
 
-typedef struct Arguments {
+typedef struct ThreadArguments {
 
+	pthread_t* threadptr;
+
+	Server* server;
+	Logic* logic;
 	int socket;
+	int clientNumber;
 	struct sockaddr_in addr;
 
-} Arguments;
+	ThreadArguments () : threadptr(nullptr), server(nullptr), logic(nullptr) {};
+
+} ThreadArguments;
+
+
+typedef struct onClientTalkThreadArguments : ThreadArguments {
+
+	std::string buffer;
+
+} onClientTalkThreadArguments;
 
 
 void* Server::onClientTalk(void *_args) {
 
-	Arguments *args = (Arguments*)(_args);
-
-	char date_string[] = "NOW"; 
+	onClientTalkThreadArguments *args = (onClientTalkThreadArguments*)(_args);
 
 	int new_fd = args->socket;
 	struct sockaddr_in their_addr = args->addr;
 
+	std::cout << "Message from client #" << args->clientNumber << " : " << std::endl << args->buffer << std::endl;
+
 	if (new_fd < 0) {
-		perror("ERROR on accept");
+		perror("Accept failed - onClientTalk");
 		exit(1);
 	}
 
+	Player* player = args->logic->getPlayer(args->socket);
 
+	if(player != nullptr) {
+
+	args->logic->routeRequest(player, args->buffer);
+	/*
 	if(send(new_fd, date_string, strlen(date_string), 0) < 0) {
 		perror("ERROR writing to socket");
 		exit(1);
+	}*/
+
 	}
 
+	pthread_t* currentThread =  args->threadptr;
+
+	delete _args;
 
 	pthread_exit(NULL);
+
+	delete currentThread;
 
 	return _args;
 }
 
-Server::Server(void)
+Server::Server(void) : logic(nullptr)
 {
-
+	this->logic = new Logic(this);
 }
 
 
@@ -115,6 +141,7 @@ void Server::start() {
 	fd_set readfds;
 	char message[] = "ECHO Daemon v1.0 \r\n";
 
+	std::vector<pthread_t*> threadCollection;
 
 	for (i = 0; i < MAX_CLIENTS; i++) 
 	{
@@ -207,7 +234,7 @@ void Server::start() {
 			//inform user of socket number - used in send and receive commands
 
 			std::cout << "New connection #" << new_socket << " from" <<  inet_ntoa(address.sin_addr) << ":" << ntohs(address.sin_port) << std::endl;
-
+			/*
 			//send new connection greeting message
 			if( send(new_socket, message, strlen(message), 0) != strlen(message) ) 
 			{
@@ -215,6 +242,7 @@ void Server::start() {
 			}
 
 			std::cout << "Welcome message sent successfully" << std::endl;
+			*/
 
 			//add new socket to array of sockets
 			for (i = 0; i < MAX_CLIENTS; i++) 
@@ -224,6 +252,8 @@ void Server::start() {
 				{
 					client_socket[i] = new_socket;
 					std::cout << "Adding to list of sockets as " << i << "\n" << std::endl;
+
+					this->logic->addPlayer(new_socket, address);
 
 					break;
 				}
@@ -235,10 +265,10 @@ void Server::start() {
 		{
 			sd = client_socket[i];
 
-			if (FD_ISSET( sd , &readfds)) 
+			if (FD_ISSET(sd, &readfds)) 
 			{
 				//Check if it was for closing , and also read the incoming message
-				if ((valread = recv( sd , buffer, MAXDATASIZE, 0)) < 0)
+				if ((valread = recv(sd, buffer, MAXDATASIZE, 0)) < 0)
 				{
 
 					//Somebody disconnected , get his details and print
@@ -246,8 +276,11 @@ void Server::start() {
 
 					std::cout << "Client #" << i << " ("<< inet_ntoa(address.sin_addr) <<":"<< ntohs(address.sin_port) << ") disconnected" << std::endl,
 
-						//Close the socket and mark as 0 in list for reuse
-						close( sd );
+					logic->removePlayer(sd);
+
+					//Close the socket and mark as 0 in list for reuse
+					close(sd);
+
 					client_socket[i] = 0;
 
 				}
@@ -257,12 +290,19 @@ void Server::start() {
 					//set the string terminating NULL byte on the end of the data read
 					buffer[valread] = '\0';
 
-					Arguments args;
-					args.socket = sd;
-					args.addr = address;
-					pthread_t thread;
+					pthread_t* onClientTalkThread = new pthread_t();
+					onClientTalkThreadArguments* args = new onClientTalkThreadArguments();
+					args->threadptr = onClientTalkThread;
+					args->server = this;
+					args->logic = this->logic;
+					args->socket = sd;
+					args->addr = address;
+					args->clientNumber = i;
+					args->buffer = buffer;
 
-					pthread_create(&thread, NULL, Server::onClientTalk, &args);
+					//threadCollection.push_back(onClientTalkThread);
+
+					pthread_create(onClientTalkThread, NULL, Server::onClientTalk, args);
 
 					std::cout << "Echo message sent successfully from client #" << i << " : " << buffer << std::endl;
 				}

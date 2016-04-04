@@ -1,9 +1,49 @@
 #ifndef PLAYERH
 #define PLAYERH
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <errno.h>
+#include <string.h>
+#include <sys/types.h>
+#include <pthread.h>
+#include <time.h>
+
+#include <string>
+#include <iostream>
+
+#ifdef WIN32
+
+	#include <winsock2.h> 
+	#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)  
+	#define close(s) closesocket(s)
+
+#elif defined (linux) 
+
+	#include <sys/types.h>
+	#include <sys/socket.h>
+	#include <netinet/in.h>
+	#include <arpa/inet.h>
+	#include <unistd.h>
+	#include <netdb.h>
+	#define INVALID_SOCKET -1
+	#define SOCKET_ERROR -1
+
+	typedef int SOCKET;
+	typedef struct sockaddr_in SOCKADDR_IN;
+	typedef struct sockaddr SOCKADDR;
+	typedef struct in_addr IN_ADDR;
+
+#else 
+
+	#error not defined for this platform
+
+#endif
+
 #include "Match.h"
 #include <string>
 #include <vector>
+#include "Server.h"
 
 class Match;
 
@@ -26,8 +66,7 @@ private:
 
 public:
 
-	Player(void);
-	Player(std::string n ) : name(n), currentID(++LastIDGiven) {};
+	Player(int socket, sockaddr_in address);
 	~Player(void);
 
 	void setName(std::string _name);

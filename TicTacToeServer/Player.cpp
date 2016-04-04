@@ -1,11 +1,46 @@
+#ifdef WIN32
+
+	#include <winsock2.h> 
+	#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)  
+	#define close(s) closesocket(s)
+
+#elif defined (linux) 
+
+	#include <sys/types.h>
+	#include <sys/socket.h>
+	#include <netinet/in.h>
+	#include <arpa/inet.h>
+	#include <unistd.h>
+	#include <netdb.h>
+	#define INVALID_SOCKET -1
+	#define SOCKET_ERROR -1
+
+	typedef int SOCKET;
+	typedef struct sockaddr_in SOCKADDR_IN;
+	typedef struct sockaddr SOCKADDR;
+	typedef struct in_addr IN_ADDR;
+
+#else 
+
+	#error not defined for this platform
+
+#endif
+
 #include "Player.h"
+#include <sstream>
 
 unsigned int Player::LastIDGiven = 0;
 
-Player::Player(void) : currentID(++LastIDGiven)
-{
-}
 
+Player::Player(int socket, sockaddr_in address) : clientSocket(socket), name(""), currentID(++LastIDGiven) {
+
+	std::stringstream name_stream;
+
+	name_stream << inet_ntoa(address.sin_addr) << ":" << ntohs(address.sin_port);
+
+	this->name = name_stream.str();
+
+};
 
 Player::~Player(void)
 {

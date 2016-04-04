@@ -137,7 +137,7 @@ int main(int argc, char *argv[])
 	delete alice;
 	delete bob;
 	delete chuck; */
-
+	/*
 	Logic logic(nullptr);
 
 	std::string setIdentityOKRequest = "TICTACTOE/1.0\r\nRequest: setIdentity\r\nPseudo: CapitaineBanana\r\n\r\n\r\n";
@@ -145,5 +145,7 @@ int main(int argc, char *argv[])
 	std::string createMatchOKRequest = "TICTACTOE/1.0\r\nRequest: createMatch\r\nGridWidth: 5\r\nGridHeight: 6\r\nPseudoPlayers: jeff03|ostro|ANYBODY\r\nWinSize: 3\r\n\r\n\r\n";
 	std::string createMatchKORequest = "TICTACTOE/1.0\r\nRequest: createMatch\r\nGridWidth: {grid_width}\r\nGridHeight: {grid_height}\r\nPseudoPlayers: {players}\r\nWinSize: {winsize}\r\n\r\n\r\n";
 	logic.routeRequest(nullptr, createMatchKORequest);
-
+	*/
+	Server tictactoeserver;
+	tictactoeserver.start();
 }

@@ -90,7 +90,7 @@ public:
 
 	void resetMatch(Player* player); //TODO véirifer que le gars qu idemande est dans la partie
 
-	void close();
+	void closeMatch();
 
 	std::vector<Participant>::iterator findPlaceToParticipate(Player* player);
 

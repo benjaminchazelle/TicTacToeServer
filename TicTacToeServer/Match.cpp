@@ -141,7 +141,7 @@ bool Match::onMatchDeserted(Player* player)
 				this->currentPlayer = nextParticipantPlayer->player;
 			}
 			else {
-				this->close();
+				this->closeMatch();
 			}
 
 
@@ -328,7 +328,7 @@ void Match::resetMatch(Player* player)
 
 } 
 
-void Match::close()
+void Match::closeMatch()
 {
 
 	for(std::vector<Participant>::iterator it = this->participantsList.begin(); it!=this->participantsList.end(); ++it) {
