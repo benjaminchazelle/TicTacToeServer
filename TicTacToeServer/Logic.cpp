@@ -127,37 +127,146 @@ bool Logic::routeRequest(Player* player, std::string requestQuery) {
 
 	}
 
-	else if(method.value == "...") {
+	else if (method.value == "getMatchList") {
 
 
-		ParsedEntity<int> MonAttributInt = QueryUtils::getIntParsing(bufferedQuery);
+		if (QueryUtils::footerParsing(bufferedQuery)) {
 
-		if(MonAttributInt.error || MonAttributInt.key != "MonAttributInt" )
-			return false;
+			getMatchListRequestQuery query;
 
-		ParsedEntity<std::string> MonAttributString = QueryUtils::getStringParsing(bufferedQuery);
-
-		if(MonAttributString.error || MonAttributString.key != "MonAttributString")
-			return false;
-
-
-		if(QueryUtils::footerParsing(bufferedQuery)) {
-
-			/*
-			maRequeteRequestQuery query;
-
-			query.MonAttributInt = MonAttributInt.value;
-			query.MonAttributString = MonAttributString.value;
-			
 			query.sender = player;
-			
-			Request::maRequete(this->server, query);
 
-			*/
+			Request::getMatchList(this->server, query);
 
 		}
 
 	}
+
+	else if(method.value == "getMatchInformation") {
+
+
+		ParsedEntity<int> match = QueryUtils::getIntParsing(bufferedQuery);
+
+		if (match.error || match.key != "match")
+			return false;
+
+		if(QueryUtils::footerParsing(bufferedQuery)) {
+
+			getMatchInformationRequestQuery query;
+
+			query.match = match.value;
+			
+			query.sender = player;
+			
+			Request::getMatchInformation(this->server, query);
+
+		}
+
+	}
+
+	else if (method.value == "playMatch") {
+
+
+		ParsedEntity<int> match = QueryUtils::getIntParsing(bufferedQuery);
+
+		if (match.error || match.key != "match")
+			return false;
+
+		ParsedEntity<int> coordinate_x = QueryUtils::getIntParsing(bufferedQuery);
+
+		if (coordinate_x.error || coordinate_x.key != "coordinate_x")
+			return false;
+
+		ParsedEntity<int> coordinate_y = QueryUtils::getIntParsing(bufferedQuery);
+
+		if (coordinate_y.error || coordinate_y.key != "coordinate_y")
+			return false;
+	
+
+
+		if (QueryUtils::footerParsing(bufferedQuery)) {
+
+			
+			playMatchRequestQuery query;
+
+			query.match = match.value;
+			query.coordinate_x = coordinate_x.value;
+			query.coordinate_y = coordinate_y.value;
+			
+			query.sender = player;
+
+			Request::playMatch(this->server, query);
+
+		}
+
+	}
+
+	else if (method.value == "resetMatch") {
+
+
+		ParsedEntity<int> match = QueryUtils::getIntParsing(bufferedQuery);
+
+		if (match.error || match.key != "MonAttributInt")
+			return false;
+
+		if (QueryUtils::footerParsing(bufferedQuery)) {
+
+			resetMatchRequestQuery query;
+
+			query.match = match.value;
+
+			query.sender = player;
+
+			Request::resetMatch(this->server, query);
+
+		}
+
+	}
+
+	else if (method.value == "quitMatch") {
+
+
+		ParsedEntity<int> match = QueryUtils::getIntParsing(bufferedQuery);
+
+		if (match.error || match.key != "MonAttributInt")
+			return false;
+		
+		if (QueryUtils::footerParsing(bufferedQuery)) {
+
+			quitMatchRequestQuery query;
+
+			query.match = match.value;
+
+			query.sender = player;
+
+			Request::quitMatch(this->server, query);
+
+		}
+
+	}
+
+	else if (method.value == "getPlayerInformation") {
+
+		ParsedEntity<std::string> playerI = QueryUtils::getStringParsing(bufferedQuery);
+
+		if (playerI.error || playerI.key != "MonAttributString")
+			return false;
+
+
+		if (QueryUtils::footerParsing(bufferedQuery)) {
+
+			getPlayerInformationRequestQuery query;
+
+			query.playerI = playerI.value;
+
+			query.sender = player;
+
+			Request::getPlayerInformation(this->server, query);
+
+		}
+
+	}
+
 	else {
 		return false;
 	}

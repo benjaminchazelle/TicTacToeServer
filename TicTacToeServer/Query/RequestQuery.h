@@ -39,9 +39,6 @@ struct createMatchRequestQuery : RequestQuery {
 
 struct getMatchListRequestQuery : RequestQuery {
 
-	std::vector<int> matchList;
-	int matchListSize;
-
 };
 
 struct getMatchInformationRequestQuery : RequestQuery {
@@ -79,7 +76,7 @@ struct quitMatchRequestQuery : RequestQuery {
 
 struct getPlayerInformationRequestQuery : RequestQuery {
 
-	std::string player;
+	std::string playerI;
 
 };
 
