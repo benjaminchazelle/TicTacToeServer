@@ -39,7 +39,7 @@ void Logic::onMatchClosed(Match* match) {
 }
 
 
-bool Logic::routeRequest(Player* player, std::string requestQuery) {
+bool Logic::routeRequest(Player* ClientPlayer, std::string requestQuery) {
 
 	std::string bufferedQuery = requestQuery;
 
@@ -58,7 +58,7 @@ bool Logic::routeRequest(Player* player, std::string requestQuery) {
 
 		getIdentityRequestQuery query;
 
-		query.sender = player;
+		query.sender = ClientPlayer;
 
 		Request::getIdentity(this->server, query);
 		
@@ -77,7 +77,7 @@ bool Logic::routeRequest(Player* player, std::string requestQuery) {
 			setIdentityRequestQuery query;
 
 			query.pseudo = Pseudo.value;
-			query.sender = player;
+			query.sender = ClientPlayer;
 
 			Request::setIdentity(this->server, query);
 
@@ -119,7 +119,7 @@ bool Logic::routeRequest(Player* player, std::string requestQuery) {
 			query.playerList = PseudoPlayers.value;
 			query.winSize = WinSize.value;
 			
-			query.sender = player;
+			query.sender = ClientPlayer;
 
 			Request::createMatch(this->server, query);
 
@@ -134,7 +134,7 @@ bool Logic::routeRequest(Player* player, std::string requestQuery) {
 
 			getMatchListRequestQuery query;
 
-			query.sender = player;
+			query.sender = ClientPlayer;
 
 			Request::getMatchList(this->server, query);
 
@@ -156,7 +156,7 @@ bool Logic::routeRequest(Player* player, std::string requestQuery) {
 
 			query.match = match.value;
 			
-			query.sender = player;
+			query.sender = ClientPlayer;
 			
 			Request::getMatchInformation(this->server, query);
 
@@ -193,7 +193,7 @@ bool Logic::routeRequest(Player* player, std::string requestQuery) {
 			query.coordinate_x = coordinate_x.value;
 			query.coordinate_y = coordinate_y.value;
 			
-			query.sender = player;
+			query.sender = ClientPlayer;
 
 			Request::playMatch(this->server, query);
 
@@ -215,7 +215,7 @@ bool Logic::routeRequest(Player* player, std::string requestQuery) {
 
 			query.match = match.value;
 
-			query.sender = player;
+			query.sender = ClientPlayer;
 
 			Request::resetMatch(this->server, query);
 
@@ -237,7 +237,7 @@ bool Logic::routeRequest(Player* player, std::string requestQuery) {
 
 			query.match = match.value;
 
-			query.sender = player;
+			query.sender = ClientPlayer;
 
 			Request::quitMatch(this->server, query);
 
@@ -247,9 +247,9 @@ bool Logic::routeRequest(Player* player, std::string requestQuery) {
 
 	else if (method.value == "getPlayerInformation") {
 
-		ParsedEntity<std::string> playerI = QueryUtils::getStringParsing(bufferedQuery);
+		ParsedEntity<std::string> player= QueryUtils::getStringParsing(bufferedQuery);
 
-		if (playerI.error || playerI.key != "MonAttributString")
+		if (player.error || player.key != "MonAttributString")
 			return false;
 
 
@@ -257,9 +257,9 @@ bool Logic::routeRequest(Player* player, std::string requestQuery) {
 
 			getPlayerInformationRequestQuery query;
 
-			query.playerI = playerI.value;
+			query.player = player.value;
 
-			query.sender = player;
+			query.sender = ClientPlayer;
 
 			Request::getPlayerInformation(this->server, query);
 

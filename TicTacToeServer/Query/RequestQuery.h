@@ -76,7 +76,7 @@ struct quitMatchRequestQuery : RequestQuery {
 
 struct getPlayerInformationRequestQuery : RequestQuery {
 
-	std::string playerI;
+	std::string player;
 
 };
 
