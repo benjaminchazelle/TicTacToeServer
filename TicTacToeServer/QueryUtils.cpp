@@ -3,8 +3,9 @@
 #include <sstream>
 #include <vector>
 #include <iostream>
+#include "Errors.h"
 
-
+class Errors;
 
 std::string QueryUtils::getLine(std::string &buffer){
 
@@ -131,7 +132,7 @@ void QueryUtils::setValue(std::string &response, std::string key, std::string va
 
 }
 
-void QueryUtils::setErrors(std::string &response, std::vector<Error>) {
+void QueryUtils::setErrors(std::string &response, Errors errors) {
 
 	setValue(response, "ErrorCode", "test");
 	setValue(response, "ErrorMessage", "test2");

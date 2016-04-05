@@ -6,7 +6,6 @@
 
 #include "../Match.h"
 #include "../Player.h"
-#include "Error.h"
 
 class Match;
 class Player;

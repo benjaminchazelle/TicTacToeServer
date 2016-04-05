@@ -6,12 +6,12 @@
 
 #include "../Match.h"
 #include "../Player.h"
-#include "Error.h"
+#include "Errors.h"
 
 
 
 struct ServerQuery {
-	std::vector<Error> queryErrors;
+	Errors queryErrors;
 	std::vector<Player*> clients;
 };
 

@@ -8,6 +8,8 @@
 //#include "Server.h"
 
 #include "Query/RequestQuery.h"
+
+#include "Errors.h"
 /*
 class Server;
 struct RequestQuery;
@@ -19,7 +21,7 @@ struct ParsedEntity{
 	T value;
 };
 
-struct Error;
+
 
 
 class QueryUtils
@@ -41,7 +43,7 @@ public:
 
 	static void setValue(std::string &response, std::string key, std::string value);
 
-	static void setErrors(std::string &response, std::vector<Error>);
+	static void setErrors(std::string &response, Errors);
 
 	static void footerBuilding(std::string &response);
 

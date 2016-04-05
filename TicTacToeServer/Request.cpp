@@ -1,6 +1,8 @@
 #include "Query/Request.h"
 #include "Query/Response.h"
 
+#include "Errors.h"
+
 #include <iostream>
 
 Request::Request(void)
@@ -23,13 +25,9 @@ void Request::getIdentity(Server* server, getIdentityRequestQuery query) {
 
 	std::vector<Player*> clientsTarget;
 	clientsTarget.push_back(query.sender);
-
-	std::vector<Error> errors;
-	Error ok_error;
-	ok_error.errorMessage = "heloo world";
-	ok_error.errorNumber = 462;
-	ok_error.errorType = 472;
-
+	
+	Errors errors;
+	errors.addError(478, 65, "dfndkjfgnjdkf");;
 
 	response.clients = clientsTarget;
 	response.pseudo = query.sender->getName();
