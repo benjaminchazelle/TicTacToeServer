@@ -4,8 +4,10 @@
 
 #include "Status.h"
 
+unsigned int Match::LastIDGiven = 0;
 
-Match::Match(unsigned int _gridWidth, unsigned int _gridHeight, unsigned int _winSize, std::vector<Participant> _participantsList, Logic* _logic) : state(WAITING_PLAYERS), winSize(3), grid(new Grid(_gridWidth, _gridHeight)), currentPlayer(nullptr), logic(_logic) {
+
+Match::Match(unsigned int _gridWidth, unsigned int _gridHeight, unsigned int _winSize, std::vector<Participant> _participantsList, Logic* _logic) : state(WAITING_PLAYERS), winSize(3), grid(new Grid(_gridWidth, _gridHeight)), currentPlayer(nullptr), logic(_logic), currentID(++LastIDGiven) {
 
 	if(_winSize > 3)
 		this->winSize = _winSize;
@@ -344,4 +346,14 @@ void Match::closeMatch()
 	}
 
 	this->logic->onMatchClosed(this);
+}
+
+unsigned int Match::getWinSize() {
+
+	return this->winSize;
+
+};
+
+unsigned int Match::getId() {
+	return this->currentID;
 }

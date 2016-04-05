@@ -357,3 +357,14 @@ bool QueryUtils::footerParsing(std::string &bufferedQuery) {
 
 	return bufferedQuery == "\r\n\r\n";
 }
+
+
+Match* Logic::addMatch(unsigned int _gridWidth, unsigned int _gridHeight, unsigned int _winSize, std::vector<Participant> _participantsList) {
+
+	Match* match = new Match(_gridWidth, _gridHeight, _winSize, _participantsList);
+
+	this->matchsList[match->getId()] = match;
+
+	return match;
+
+}

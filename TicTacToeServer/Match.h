@@ -45,6 +45,10 @@ enum MatchState {
 class Match
 {
 private:
+
+   static unsigned int LastIDGiven;
+   const unsigned int currentID;
+
 	std::vector<Participant> participantsList;
 	Grid* grid;
 
@@ -96,6 +100,10 @@ public:
 	void closeMatch();
 
 	std::vector<Participant>::iterator findPlaceToParticipate(Player* player);
+
+	unsigned int getWinSize();
+
+	unsigned int getId();
 
 };
 

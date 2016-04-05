@@ -73,6 +73,8 @@ public:
 	Player* getPlayer(int socket);
 	Player* getPlayer(std::string pseudo);
 
+	Match* addMatch(unsigned int _gridWidth, unsigned int _gridHeight, unsigned int _winSize, std::vector<Participant> _participantsList);
+
 	bool isPseudoAvailable(std::string pseudo);
 
 	void onMatchClosed( Match* );
