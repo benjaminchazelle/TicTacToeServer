@@ -71,6 +71,9 @@ public:
 	void addPlayer(int socket, sockaddr_in address);
 	void removePlayer(int socket);
 	Player* getPlayer(int socket);
+	Player* getPlayer(std::string pseudo);
+
+	bool isPseudoAvailable(std::string pseudo);
 
 	void onMatchClosed( Match* );
 

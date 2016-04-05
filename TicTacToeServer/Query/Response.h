@@ -34,6 +34,12 @@ public:
 	static void getPlayerInformation(Server* server, getPlayerInformationResponseQuery query);
 
 
+
+	static std::vector<Player*> unicastHelper(Player* sender);
+
+	static std::vector<Player*> multicastHelper(Match* match);
+
+
 };
 
 #endif

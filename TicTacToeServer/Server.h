@@ -62,6 +62,8 @@ public:
 	void Server::start();
 
 	bool Server::sendTo(std::string response, std::vector<Player*> clients);
+
+	Logic* getLogic();
 };
 
 #endif

@@ -5,7 +5,6 @@
 #include <vector>
 
 struct Error {
-	int errorType;
 	int errorNumber;
 	std::string errorMessage;
 };
@@ -15,11 +14,18 @@ class Errors
 private:
 	std::vector<Error> errors;
 
+	int errorType;
+
 public:
-	Errors(void);
+	Errors(int errorType);
 	~Errors(void);
 
-	Errors* addError(int errorType, int errorNumber, std::string errorMessage);
+	Errors* addError(int errorNumber, std::string errorMessage);
+
+	int getErrorType();
+	std::vector<Error> Errors::getErrors();
+
+	bool isThereErrorNumber(int errorNumber);
 };
 
 #endif;

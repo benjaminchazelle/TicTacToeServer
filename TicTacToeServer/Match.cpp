@@ -2,7 +2,7 @@
 #include "Player.h"
 #include "Logic.h"
 
-
+#include "Status.h"
 
 
 Match::Match(unsigned int _gridWidth, unsigned int _gridHeight, unsigned int _winSize, std::vector<Participant> _participantsList, Logic* _logic) : state(WAITING_PLAYERS), winSize(3), grid(new Grid(_gridWidth, _gridHeight)), currentPlayer(nullptr), logic(_logic) {
@@ -35,32 +35,32 @@ Grid* Match::getGrid()
 	return this->grid;
 }
 
-bool Match::inviteParticipant(Participant participant)
+bool Match::inviteParticipant(Participant invited_participant)
 {
 	//Si la partie n'a pas commencé
 	//Si l'invitation désigne un joueur particulier, Si le joueur invité existe et qu'il n'est pas encore dans la partie ()
 	//Ou si l'invitation concerne n'importe qui
 
 	if(this->state != WAITING_PLAYERS)
-		return false;
+		return Status::MATCH_EVER_STARTED_OR_FINISHED;
 
-	bool PlayerInvitation_valid = participant.player != nullptr && participant.state == INVITED_PLAYER && !this->ThisPlayerIsParticipant(participant.player);
-	bool AnyoneInvitation_valid = participant.state == INVITED_ANYONE;
+	bool PlayerInvitation_valid = invited_participant.player != nullptr && invited_participant.state == INVITED_PLAYER && !this->ThisPlayerIsParticipant(invited_participant.player);
+	bool AnyoneInvitation_valid = invited_participant.state == INVITED_ANYONE;
 	bool Invitation_valid = PlayerInvitation_valid || AnyoneInvitation_valid;
 
 	if(!Invitation_valid)
-		return false;
+		return Status::INVALID_INVITATION;
 
 
 	if(AnyoneInvitation_valid)
-		participant.player = nullptr;
+		invited_participant.player = nullptr;
 
-	this->participantsList.push_back(participant);
+	this->participantsList.push_back(invited_participant);
 
 	if(PlayerInvitation_valid)
-		participant.player->onMatchInvited(this);
+		invited_participant.player->onMatchInvited(this);
 
-	return true;
+	return Status::PARTICIPANT_ADDED;
 
 
 
@@ -76,7 +76,7 @@ bool Match::onMatchAccepted(Player* player)
 		return false;
 
 	if(player == nullptr)
-		return false;
+		return Status::PLAYER_NOT_EXISTS;
 
 	std::vector<Participant>::iterator place_it = findPlaceToParticipate(player);
 
@@ -189,7 +189,7 @@ std::vector<Participant>::iterator Match::getNextParticipantPlayer(std::vector<P
 bool Match::play(Player* player, unsigned int x, unsigned int y)
 {
 	if(this->state != MatchState::PROGRESS)
-		return false;
+		return Status::MATCH_NOT_STARTED;
 
 	if(player == nullptr)
 		return false;
@@ -224,7 +224,7 @@ bool Match::play(Player* player, unsigned int x, unsigned int y)
 		this->currentPlayer = nullptr;
 	}
 
-	return true;
+	return Status::MATCH_STROKE_DONE;
 }
 
 std::vector<Participant>::iterator Match::findPlaceToParticipate(Player* player) {

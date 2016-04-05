@@ -134,8 +134,46 @@ void QueryUtils::setValue(std::string &response, std::string key, std::string va
 
 void QueryUtils::setErrors(std::string &response, Errors errors) {
 
-	setValue(response, "ErrorCode", "test");
-	setValue(response, "ErrorMessage", "test2");
+	std::stringstream errorCode_stream;
+	errorCode_stream << errors.getErrorType() ;
+
+	std::vector<Error> errorsList = errors.getErrors();
+
+	unsigned int errorsNumber = errorsList.size();
+
+	if(errorsNumber == 0) {
+		setValue(response, "ErrorCode", "?");
+		setValue(response, "ErrorMessage", "If you see this message, it means the developer is only stupid.");
+		return;
+	}
+
+
+	for(std::vector<Error>::iterator it=errorsList.begin(); it!=errorsList.end(); ++it) {
+
+		if(errorsNumber > 1)
+			errorCode_stream << "+";
+
+		errorCode_stream << it->errorNumber;
+
+	}
+
+	setValue(response, "ErrorCode", errorCode_stream.str());
+	
+	if(errorsNumber == 1) {
+		setValue(response, "ErrorMessage", errorsList.at(0).errorMessage);
+	}
+	else {
+
+		for(std::vector<Error>::iterator it=errorsList.begin(); it!=errorsList.end(); ++it) {
+
+			std::stringstream errorMessage_stream;
+			errorMessage_stream << "#" <<errorsList.at(0).errorNumber << " " << errorsList.at(0).errorMessage;
+
+			setValue(response, "ErrorMessage", errorMessage_stream.str());
+
+		}
+
+	}
 
 }
 

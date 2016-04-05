@@ -13,29 +13,29 @@
 
 #ifdef WIN32
 
-	#include <winsock2.h> 
-	#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)  
-	#define close(s) closesocket(s)
+#include <winsock2.h> 
+#define bzero(b,len) (memset((b), '\0', (len)), (void) 0)  
+#define close(s) closesocket(s)
 
 #elif defined (linux) 
 
-	#include <sys/types.h>
-	#include <sys/socket.h>
-	#include <netinet/in.h>
-	#include <arpa/inet.h>
-	#include <unistd.h>
-	#include <netdb.h>
-	#define INVALID_SOCKET -1
-	#define SOCKET_ERROR -1
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <netdb.h>
+#define INVALID_SOCKET -1
+#define SOCKET_ERROR -1
 
-	typedef int SOCKET;
-	typedef struct sockaddr_in SOCKADDR_IN;
-	typedef struct sockaddr SOCKADDR;
-	typedef struct in_addr IN_ADDR;
+typedef int SOCKET;
+typedef struct sockaddr_in SOCKADDR_IN;
+typedef struct sockaddr SOCKADDR;
+typedef struct in_addr IN_ADDR;
 
 #else 
 
-	#error not defined for this platform
+#error not defined for this platform
 
 #endif
 
@@ -84,12 +84,12 @@ void* Server::onClientTalk(void *_args) {
 
 	if(player != nullptr) {
 
-	args->logic->routeRequest(player, args->buffer);
-	/*
-	if(send(new_fd, date_string, strlen(date_string), 0) < 0) {
+		args->logic->routeRequest(player, args->buffer);
+		/*
+		if(send(new_fd, date_string, strlen(date_string), 0) < 0) {
 		perror("ERROR writing to socket");
 		exit(1);
-	}*/
+		}*/
 
 	}
 
@@ -113,25 +113,25 @@ Server::Server(void) : logic(nullptr)
 void Server::start() {
 
 
-	#ifdef WIN32
+#ifdef WIN32
 
-		WSADATA wsa;
+	WSADATA wsa;
 
-		int err = WSAStartup(MAKEWORD(2, 2), &wsa);
+	int err = WSAStartup(MAKEWORD(2, 2), &wsa);
 
-		if(err < 0)
-		{
-			puts("WSAStartup failed !");
-			exit(EXIT_FAILURE);
-		}
+	if(err < 0)
+	{
+		puts("WSAStartup failed !");
+		exit(EXIT_FAILURE);
+	}
 
-		int sin_size = sizeof(struct sockaddr);
+	int sin_size = sizeof(struct sockaddr);
 
-	#else
+#else
 
-		unsigned int sin_size = sizeof(struct sockaddr);
+	unsigned int sin_size = sizeof(struct sockaddr);
 
-	#endif
+#endif
 
 	int opt = 1;
 	int master_socket, new_socket , client_socket[MAX_CLIENTS], activity, i, valread, sd;
@@ -238,7 +238,7 @@ void Server::start() {
 			//send new connection greeting message
 			if( send(new_socket, message, strlen(message), 0) != strlen(message) ) 
 			{
-				perror("Send failed");
+			perror("Send failed");
 			}
 
 			std::cout << "Welcome message sent successfully" << std::endl;
@@ -276,7 +276,7 @@ void Server::start() {
 
 					std::cout << "Client #" << i << " ("<< inet_ntoa(address.sin_addr) <<":"<< ntohs(address.sin_port) << ") disconnected" << std::endl,
 
-					logic->removePlayer(sd);
+						logic->removePlayer(sd);
 
 					//Close the socket and mark as 0 in list for reuse
 					close(sd);
@@ -324,15 +324,19 @@ bool Server::sendTo(std::string response, std::vector<Player*> clients) {
 	unsigned int len = strlen(response.c_str());
 
 	for(unsigned int i=0; i < clients.size(); i++) {
-	
-	if(send(clients.at(i)->getSocket(), response.c_str(), len, 0) < 0) {
-		perror("ERROR writing to socket");
-		exit(1);
-	}
+
+		if(send(clients.at(i)->getSocket(), response.c_str(), len, 0) < 0) {
+			perror("ERROR writing to socket");
+			exit(1);
+		}
 
 	}
 
 
 	return false;//dbg
 
+}
+
+Logic* Server::getLogic() {
+	return this->logic;
 }

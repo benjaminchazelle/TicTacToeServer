@@ -100,6 +100,22 @@ Player* Logic::getPlayer(int socket){
 
 }
 
+Player* Logic::getPlayer(std::string pseudo) {
+
+	for(std::map<int, Player*>::iterator it = this->playersList.begin(); it!= this->playersList.end();)
+	{
+		if(it->second->getName() == pseudo)
+			return it->second;
+	}
+
+	return nullptr;
+}
+
+bool Logic::isPseudoAvailable(std::string pseudo) {
+
+	return this->getPlayer(pseudo) != nullptr;
+
+};
 
 bool Logic::routeRequest(Player* ClientPlayer, std::string requestQuery) {
 
