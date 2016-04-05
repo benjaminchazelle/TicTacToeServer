@@ -65,7 +65,7 @@ void Response::createMatch(Server* server, createMatchResponseQuery query) {
 		else
 		{
 
-			tmpPlayer == it->player->getName;
+			tmpPlayer == it->player->getName();
 
 		}
 
@@ -91,7 +91,7 @@ void Response::createMatch(Server* server, createMatchResponseQuery query) {
 	QueryUtils::setValue(response, "GridWidth", query.match->getGrid()->getGridWidth());
 	QueryUtils::setValue(response, "GridHeight", query.match->getGrid()->getGridHeight());
 	QueryUtils::setValue(response, "PseudoPlayers", playersList_stream.str());
-	QueryUtils::setValue(response, "WinSize", query.match->getGrid();
+	//QueryUtils::setValue(response, "WinSize", query.match->getGrid()); //TODO getter win size
 
 	QueryUtils::setErrors(response, query.queryErrors);
 
@@ -109,8 +109,8 @@ void Response::getMatchList(Server* server, getMatchListResponseQuery query) {
 
 	QueryUtils::setValue(response, "Response", "getMatchList");
 
-	QueryUtils::setValue(response, "MatchCount", query.matchList.size());
-	QueryUtils::setValue(response, "MatchCount", query.matchList.size());
+	QueryUtils::setValue(response, "MatchCount", query.matchesList.size());
+	QueryUtils::setValue(response, "MatchCount", query.matchesList.size());
 
 	QueryUtils::setErrors(response, query.queryErrors);
 
@@ -125,10 +125,11 @@ void Response::getMatchInformation(Server* server, getMatchInformationResponseQu
 	std::string response = "";
 
 	QueryUtils::headerBuilding(response);
+	//TODO
+	//
+	//QueryUtils::setValue(response, "Response", "setIdentity");
 
-	QueryUtils::setValue(response, "Response", "setIdentity");
-
-	QueryUtils::setValue(response, "Pseudo", query.pseudo);
+	//QueryUtils::setValue(response, "Pseudo", query.pseudo);
 
 	QueryUtils::setErrors(response, query.queryErrors);
 
@@ -143,10 +144,10 @@ void Response::joinMatch(Server* server, joinMatchResponseQuery query) {
 	std::string response = "";
 
 	QueryUtils::headerBuilding(response);
+		//TODO
+	//QueryUtils::setValue(response, "Response", "setIdentity");
 
-	QueryUtils::setValue(response, "Response", "setIdentity");
-
-	QueryUtils::setValue(response, "Pseudo", query.pseudo);
+	//QueryUtils::setValue(response, "Pseudo", query.pseudo);
 
 	QueryUtils::setErrors(response, query.queryErrors);
 
@@ -161,10 +162,10 @@ void Response::playMatch(Server* server, playMatchResponseQuery query) {
 	std::string response = "";
 
 	QueryUtils::headerBuilding(response);
+		//TODO
+	//QueryUtils::setValue(response, "Response", "setIdentity");
 
-	QueryUtils::setValue(response, "Response", "setIdentity");
-
-	QueryUtils::setValue(response, "Pseudo", query.pseudo);
+	//QueryUtils::setValue(response, "Pseudo", query.pseudo);
 
 	QueryUtils::setErrors(response, query.queryErrors);
 
@@ -179,10 +180,10 @@ void Response::resetMatch(Server* server, resetMatchResponseQuery query) {
 	std::string response = "";
 
 	QueryUtils::headerBuilding(response);
+		//TODO
+	//QueryUtils::setValue(response, "Response", "setIdentity");
 
-	QueryUtils::setValue(response, "Response", "setIdentity");
-
-	QueryUtils::setValue(response, "Pseudo", query.pseudo);
+	//QueryUtils::setValue(response, "Pseudo", query.pseudo);
 
 	QueryUtils::setErrors(response, query.queryErrors);
 
@@ -197,10 +198,10 @@ void Response::quitMatch(Server* server, quitMatchResponseQuery query) {
 	std::string response = "";
 
 	QueryUtils::headerBuilding(response);
+		//TODO
+	//QueryUtils::setValue(response, "Response", "setIdentity");
 
-	QueryUtils::setValue(response, "Response", "setIdentity");
-
-	QueryUtils::setValue(response, "Pseudo", query.pseudo);
+	//QueryUtils::setValue(response, "Pseudo", query.pseudo);
 
 	QueryUtils::setErrors(response, query.queryErrors);
 
@@ -215,12 +216,12 @@ void Response::getPlayerInformation(Server* server, getPlayerInformationResponse
 	std::string response = "";
 
 	QueryUtils::headerBuilding(response);
-
+		//TODO
 	QueryUtils::setValue(response, "Response", "setIdentity");
 
-	QueryUtils::setValue(response, "Pseudo", query.pseudo);
+	//QueryUtils::setValue(response, "Pseudo", query.pseudo);
 
-	QueryUtils::setErrors(response, query.queryErrors);
+	//QueryUtils::setErrors(response, query.queryErrors);
 
 	QueryUtils::footerBuilding(response);
 
@@ -251,7 +252,7 @@ std::vector<Player*> Response::multicastHelper(Match* match){
 	std::vector<Player*> target;
 
 	if (match == nullptr)
-		return;
+		return target;
 
 	for (std::vector<Participant>::iterator it = match->getParticipantsList().begin(); it != match->getParticipantsList().end(); ++it) {
 

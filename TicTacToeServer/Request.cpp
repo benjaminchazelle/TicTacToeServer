@@ -2,7 +2,7 @@
 #include "Query/Response.h"
 
 #include "Errors.h"
-
+#include <sstream>
 #include <iostream>
 #include <regex>
 
@@ -71,10 +71,55 @@ void Request::createMatch(Server* server, createMatchRequestQuery query) {
 	//Ex : dans une grille 3 x 3, on ne peut pas aligner 4 pions
 
 	//Tester si les players sont valides, pseudos bien formatés...
-	/*
+	
 	createMatchResponseQuery response;
 	Errors errors(3);
+	/*
+	std::stringstream playersList_stream(query.playersList);
+	std::string pseudo;
 
+
+	while (std::getline(ss, item, '|')) {
+		cout << item << endl;
+	}*/
+	/*
+	bool validGridSize = query.gridWidth >= 3 && query.gridHeight >= 3;
+
+	bool validWinSize = query.winSize >= 3 && query.winSize <= min(query.gridWidth, query.gridHeight);
+
+	bool validParticipants = true;
+
+	for(std::vector<std::string>::iterator it=query.playersList.begin();it != query.playersList.end();++it) {
+
+		if(*it != "ANYBODY" && server->getLogic()->isPseudoAvailable(*it)) {
+			validParticipants = false;
+			break;
+		}
+
+	}
+
+	if(!validGridSize)
+		errors.addError(1, "Pseudo unavailable");
+
+	if(!validPseudoFormat)
+		errors.addError(2, "Pseudo must respect the [a-z0-9]+ format");
+	
+	if(pseudoAvailable && validPseudoFormat) {
+
+		query.sender->setName(query.pseudo);
+
+		errors.addError(0, "Pseudo has been define with success");
+
+	}
+
+	response.clients = Response::unicastHelper(query.sender);
+	response.pseudo = query.sender->getName();
+	response.queryErrors = errors;
+
+	std::cout << "*setIdentity" << std::endl;*/
+
+	//bool 
+/*
 	bool pseudoAvailable = server->getLogic()->isPseudoAvailable(query.pseudo);
 
 	bool validPseudoFormat = std::regex_match (query.pseudo, std::regex("^[a-z0-9]+$"));

@@ -35,7 +35,7 @@ Grid* Match::getGrid()
 	return this->grid;
 }
 
-bool Match::inviteParticipant(Participant invited_participant)
+Status Match::inviteParticipant(Participant invited_participant)
 {
 	//Si la partie n'a pas commencé
 	//Si l'invitation désigne un joueur particulier, Si le joueur invité existe et qu'il n'est pas encore dans la partie ()
@@ -76,7 +76,7 @@ bool Match::onMatchAccepted(Player* player)
 		return false;
 
 	if(player == nullptr)
-		return Status::PLAYER_NOT_EXISTS;
+		return false;
 
 	std::vector<Participant>::iterator place_it = findPlaceToParticipate(player);
 
@@ -186,24 +186,24 @@ std::vector<Participant>::iterator Match::getNextParticipantPlayer(std::vector<P
 
 
 
-bool Match::play(Player* player, unsigned int x, unsigned int y)
+Status Match::play(Player* player, unsigned int x, unsigned int y)
 {
 	if(this->state != MatchState::PROGRESS)
 		return Status::MATCH_NOT_STARTED;
 
 	if(player == nullptr)
-		return false;
+		return Status::PLAYER_NOT_EXISTS;
 
 	std::vector<Participant>::iterator participant = findParticipant(player);
 
 	if(participant == this->participantsList.end())
-		return false;
+		return Status::MATCH_PLAYER_IS_NOT_PARTICIPANT;
 
 	if(participant->player != this->currentPlayer)
-		return false;
+		return Status::MATCH_NOT_PLAYED_BY_CURRENT_PLAYER;
 
 	if(!this->grid->play(player, x, y))
-		return false;
+		return Status::MATCH_INVALID_STROKE;
 
 	std::vector<Participant>::iterator nextParticipantPlayer = this->getNextParticipantPlayer(participant);
 

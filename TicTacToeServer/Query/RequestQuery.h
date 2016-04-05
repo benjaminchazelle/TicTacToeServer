@@ -31,7 +31,7 @@ struct createMatchRequestQuery : RequestQuery {
 
 	int gridWidth;
 	int gridHeight;
-	std::vector<std::string> playerList;
+	std::vector<std::string> playersList;
 	int winSize;
 
 };

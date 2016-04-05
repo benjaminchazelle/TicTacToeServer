@@ -194,7 +194,7 @@ bool Logic::routeRequest(Player* ClientPlayer, std::string requestQuery) {
 
 			query.gridWidth = GridWidth.value;
 			query.gridHeight = GridHeight.value;
-			query.playerList = PseudoPlayers.value;
+			query.playersList = PseudoPlayers.value;
 			query.winSize = WinSize.value;
 
 			query.sender = ClientPlayer;

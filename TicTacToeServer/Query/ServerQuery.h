@@ -37,7 +37,7 @@ struct createMatchResponseQuery : ServerQuery {
 
 struct getMatchListResponseQuery : ServerQuery {
 
-	std::vector<Match*> matchList;
+	std::vector<Match*> matchesList;
 
 };
 

@@ -5,6 +5,7 @@
 #include <vector>
 #include "Grid.h"
 #include "Logic.h"
+#include "Status.h"
 
 
 class Player;
@@ -66,12 +67,12 @@ public:
 
 	Grid* getGrid();
 
-	bool inviteParticipant(Participant participant);
+	Status inviteParticipant(Participant participant);
 
 	bool onMatchAccepted(Player* player);
 	bool onMatchDeserted(Player* player);
 
-	bool play(Player* player, unsigned int x, unsigned int y);
+	Status play(Player* player, unsigned int x, unsigned int y);
 
 	unsigned int getwinSize();
 

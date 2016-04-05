@@ -17,7 +17,7 @@ private:
 	int errorType;
 
 public:
-	Errors(int errorType);
+	Errors(int errorType=-1);
 	~Errors(void);
 
 	Errors* addError(int errorNumber, std::string errorMessage);
