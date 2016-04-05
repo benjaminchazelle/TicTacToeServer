@@ -42,6 +42,7 @@ public:
 	static void headerBuilding(std::string &response);
 
 	static void setValue(std::string &response, std::string key, std::string value);
+	static void setValue(std::string &response, std::string key, int value);
 
 	static void setErrors(std::string &response, Errors);
 

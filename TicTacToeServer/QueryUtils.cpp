@@ -132,6 +132,16 @@ void QueryUtils::setValue(std::string &response, std::string key, std::string va
 
 }
 
+void QueryUtils::setValue(std::string &response, std::string key, int value) {
+
+	std::stringstream int_stream;
+
+	int_stream << value;
+
+	QueryUtils::setValue(response, key, int_stream.str());
+
+}
+
 void QueryUtils::setErrors(std::string &response, Errors errors) {
 
 	std::stringstream errorCode_stream;

@@ -73,6 +73,8 @@ public:
 
 	bool play(Player* player, unsigned int x, unsigned int y);
 
+	unsigned int getwinSize();
+
 	Player* getCurrentPlayer();
 
 	std::vector<Participant> getParticipantsList();
