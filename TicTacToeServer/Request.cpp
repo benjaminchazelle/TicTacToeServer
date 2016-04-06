@@ -44,6 +44,8 @@ void Request::setIdentity(Server* server, setIdentityRequestQuery query) {
 	response.pseudo = query.sender->getName();
 	response.queryErrors = errors;
 
+	Response::setIdentity(server, response);
+
 	std::cout << "*setIdentity" << std::endl;
 }
 
@@ -129,6 +131,7 @@ void Request::createMatch(Server* server, createMatchRequestQuery query) {
 	response.clients = Response::unicastHelper(query.sender);
 	response.queryErrors = errors;
 
+	Response::createMatch(server, response);
 
 	std::cout << "*createMatch" << std::endl;
 }

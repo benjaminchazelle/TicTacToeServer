@@ -102,7 +102,7 @@ Player* Logic::getPlayer(int socket){
 
 Player* Logic::getPlayer(std::string pseudo) {
 
-	for(std::map<int, Player*>::iterator it = this->playersList.begin(); it!= this->playersList.end();)
+	for(std::map<int, Player*>::iterator it = this->playersList.begin(); it!= this->playersList.end();++it)
 	{
 		if(it->second->getName() == pseudo)
 			return it->second;
@@ -123,8 +123,14 @@ bool Logic::routeRequest(Player* ClientPlayer, std::string requestQuery) {
 
 	bool validHeader = QueryUtils::headerParsing(bufferedQuery);
 
-	if(!validHeader)
+	RequestQuery NonSensequery;
+	NonSensequery.sender = ClientPlayer;
+
+	if(!validHeader) {
+		Request::nonSense(this->server, NonSensequery);
 		return false;
+	}
+
 
 
 	ParsedEntity<std::string> method = QueryUtils::getStringParsing(bufferedQuery);
@@ -377,6 +383,8 @@ bool Logic::routeRequest(Player* ClientPlayer, std::string requestQuery) {
 	}
 
 	else {
+
+		Request::nonSense(this->server, NonSensequery);
 		return false;
 	}
 
