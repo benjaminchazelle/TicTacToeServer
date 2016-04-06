@@ -54,8 +54,9 @@ Logic::~Logic(void)
 }
 
 std::map<unsigned int, Match*> Logic::getMatchsList() {
+	
 	return this->matchsList;
-	//todo qqch
+	
 }
 
 

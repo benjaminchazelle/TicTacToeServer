@@ -2,6 +2,7 @@
 #define GRIDH
 
 #include "Player.h"
+#include "Status.h"
 
 class Player;
 

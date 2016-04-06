@@ -60,9 +60,7 @@ void Response::createMatch(Server* server, createMatchResponseQuery query) {
 
 		QueryUtils::setValue(response, "Response", "createMatch");
 
-		//TODO mettre un id dans match
-
-		//QueryUtils::setValue(response, "MatchId", query.match);
+		QueryUtils::setValue(response, "MatchId", query.match->getId());
 		QueryUtils::setValue(response, "GridWidth", query.match->getGrid()->getGridWidth());
 		QueryUtils::setValue(response, "GridHeight", query.match->getGrid()->getGridHeight());
 
@@ -102,7 +100,7 @@ void Response::createMatch(Server* server, createMatchResponseQuery query) {
 		}
 
 		QueryUtils::setValue(response, "PseudoPlayers", playersList_stream.str());
-		//QueryUtils::setValue(response, "WinSize", query.match->getGrid()); //TODO getter win size
+		QueryUtils::setValue(response, "WinSize", query.match->getWinSize());
 
 	}
 
@@ -135,7 +133,7 @@ void Response::getMatchList(Server* server, getMatchListResponseQuery query) {
 
 			if (it->second == nullptr) continue;
 
-			if (it->second->getCurrentPlayer() != query.clients.at(0))
+			if (it->second->canPlayerJoin(query.clients.at(0)))
 			{
 
 				jouable = "0";

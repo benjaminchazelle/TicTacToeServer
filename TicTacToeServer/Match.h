@@ -81,9 +81,7 @@ public:
 	Status onMatchDeserted(Player* player);
 
 	Status play(Player* player, unsigned int x, unsigned int y);
-
-	unsigned int getwinSize();
-
+	
 	Player* getCurrentPlayer();
 
 	std::vector<Participant> getParticipantsList();
@@ -99,7 +97,7 @@ public:
 	std::vector<Participant>::iterator findParticipant(Player* player);
 	bool ThisPlayerIsParticipant(Player* player);
 
-	Status resetMatch(Player* player); //TODO véirifer que le gars qu idemande est dans la partie
+	Status resetMatch(Player* player);
 
 	void closeMatch();
 
