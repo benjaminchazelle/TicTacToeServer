@@ -12,9 +12,9 @@ void Response::getIdentity(Server* server, getIdentityResponseQuery query) {
 
 	QueryUtils::headerBuilding(response);
 
-	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
+	QueryUtils::setValue(response, "Response", "getIdentity");
 
-		QueryUtils::setValue(response, "Response", "getIdentity");
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
 
 		QueryUtils::setValue(response, "Pseudo", query.pseudo);
 
@@ -34,9 +34,9 @@ void Response::setIdentity(Server* server, setIdentityResponseQuery query){
 
 	QueryUtils::headerBuilding(response);
 
-	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
+	QueryUtils::setValue(response, "Response", "setIdentity");
 
-		QueryUtils::setValue(response, "Response", "setIdentity");
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
 
 		QueryUtils::setValue(response, "Pseudo", query.pseudo);
 
@@ -56,9 +56,9 @@ void Response::createMatch(Server* server, createMatchResponseQuery query) {
 
 	QueryUtils::headerBuilding(response);
 
-	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
+	QueryUtils::setValue(response, "Response", "createMatch");
 
-		QueryUtils::setValue(response, "Response", "createMatch");
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
 
 		QueryUtils::setValue(response, "MatchId", query.match->getId());
 		QueryUtils::setValue(response, "GridWidth", query.match->getGrid()->getGridWidth());
@@ -118,9 +118,9 @@ void Response::getMatchList(Server* server, getMatchListResponseQuery query) {
 
 	QueryUtils::headerBuilding(response);
 
-	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
+	QueryUtils::setValue(response, "Response", "getMatchList");
 
-		QueryUtils::setValue(response, "Response", "getMatchList");
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
 
 		QueryUtils::setValue(response, "MatchCount", query.matchesList.size());
 
@@ -175,9 +175,9 @@ void Response::getMatchInformation(Server* server, getMatchInformationResponseQu
 
 	QueryUtils::headerBuilding(response);
 
-	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
+	QueryUtils::setValue(response, "Response", "getMatchInformation");
 
-		QueryUtils::setValue(response, "Response", "getMatchInformation");
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
 
 		QueryUtils::setValue(response, "MatchId", query.match->getId());
 
@@ -310,9 +310,9 @@ void Response::joinMatch(Server* server, joinMatchResponseQuery query) {
 
 	QueryUtils::headerBuilding(response);
 
-	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
+	QueryUtils::setValue(response, "Response", "joinMatch");
 
-		QueryUtils::setValue(response, "Response", "joinMatch");
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
 
 		QueryUtils::setValue(response, "MatchId", query.match->getId());
 
@@ -347,9 +347,9 @@ void Response::playMatch(Server* server, playMatchResponseQuery query) {
 
 	QueryUtils::headerBuilding(response);
 
-	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
+	QueryUtils::setValue(response, "Response", "playMatch");
 
-		QueryUtils::setValue(response, "Response", "playMatch");
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
 
 		QueryUtils::setValue(response, "MatchId", query.match->getId());
 
@@ -480,9 +480,9 @@ void Response::resetMatch(Server* server, resetMatchResponseQuery query) {
 
 	QueryUtils::headerBuilding(response);
 
-	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
+	QueryUtils::setValue(response, "Response", "resetMatch");
 
-		QueryUtils::setValue(response, "Response", "resetMatch");
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
 
 		QueryUtils::setValue(response, "MatchId", query.match->getId());
 
@@ -502,9 +502,9 @@ void Response::quitMatch(Server* server, quitMatchResponseQuery query) {
 
 	QueryUtils::headerBuilding(response);
 
-	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
+	QueryUtils::setValue(response, "Response", "quitMatch");
 
-		QueryUtils::setValue(response, "Response", "quitMatch");
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
 
 		QueryUtils::setValue(response, "MatchId", query.match->getId());
 
@@ -524,9 +524,9 @@ void Response::getPlayerInformation(Server* server, getPlayerInformationResponse
 
 	QueryUtils::headerBuilding(response);
 
-	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
+	QueryUtils::setValue(response, "Response", "getPlayerInformation");
 
-		QueryUtils::setValue(response, "Response", "getPlayerInformation");
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
 
 		QueryUtils::setValue(response, "Pseudo", query.clients.at(0)->getName());
 		QueryUtils::setValue(response, "GlobalScore", query.clients.at(0)->getGlobalScore());
