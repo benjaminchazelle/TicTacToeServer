@@ -79,20 +79,22 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Errors.h" />
     <ClInclude Include="Grid.h" />
     <ClInclude Include="Logic.h" />
     <ClInclude Include="Match.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="QueryUtils.h" />
-    <ClInclude Include="Query\Error.h" />
     <ClInclude Include="Query\Notify.h" />
     <ClInclude Include="Query\Request.h" />
     <ClInclude Include="Query\RequestQuery.h" />
     <ClInclude Include="Query\Response.h" />
     <ClInclude Include="Query\ServerQuery.h" />
     <ClInclude Include="Server.h" />
+    <ClInclude Include="Status.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Errors.cpp" />
     <ClCompile Include="Grid.cpp" />
     <ClCompile Include="Logic.cpp" />
     <ClCompile Include="Match.cpp" />
@@ -100,6 +102,7 @@
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="QueryUtils.cpp" />
     <ClCompile Include="Request.cpp" />
+    <ClCompile Include="Response.cpp" />
     <ClCompile Include="Server.cpp" />
     <ClCompile Include="Source.cpp" />
   </ItemGroup>

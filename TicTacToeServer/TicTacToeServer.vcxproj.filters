@@ -33,9 +33,6 @@
     <ClInclude Include="Grid.h">
       <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
-    <ClInclude Include="Query\Error.h">
-      <Filter>Fichiers d%27en-tête\Query</Filter>
-    </ClInclude>
     <ClInclude Include="Query\RequestQuery.h">
       <Filter>Fichiers d%27en-tête\Query</Filter>
     </ClInclude>
@@ -45,14 +42,20 @@
     <ClInclude Include="Query\Request.h">
       <Filter>Fichiers d%27en-tête\Query</Filter>
     </ClInclude>
-    <ClInclude Include="Logic.h">
-      <Filter>Fichiers d%27en-tête\Query</Filter>
-    </ClInclude>
     <ClInclude Include="Query\Notify.h">
       <Filter>Fichiers d%27en-tête\Query</Filter>
     </ClInclude>
     <ClInclude Include="Query\ServerQuery.h">
       <Filter>Fichiers d%27en-tête\Query</Filter>
+    </ClInclude>
+    <ClInclude Include="Status.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Logic.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="Errors.h">
+      <Filter>Fichiers d%27en-tête</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -81,6 +84,12 @@
       <Filter>Fichiers sources</Filter>
     </ClCompile>
     <ClCompile Include="Match.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Response.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Errors.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
   </ItemGroup>

@@ -141,42 +141,9 @@ void Notify::playMatch(Server* server, playMatchNotifyQuery query) {
 
 	QueryUtils::setValue(notify, "Players", playersList_stream.str());
 
-	std::string result = "";
-
-	if (query.match->getState() == FINISHED){
-
-		if (query.match->getWinner().player == query.clients.at(0)){
-
-			result = "YOU_WIN";
-
-		}
-		else{
-
-			result = "YOU_LOOSE";
-
-		}
-
-	}
-	else{
-
-		if (query.match->getCurrentPlayer() == query.clients.at(0)){
-
-			result = "YOU_PLAY";
-
-		}
-		else{
-
-			result = "YOU_WAIT";
-
-		}
-
-	}
-
-	QueryUtils::setValue(notify, "Result", result);
-
 	QueryUtils::setValue(notify, "ErrorCode", "70-0");
 
-	QueryUtils::setValue(notify, "ErrorMessage", "An opponent played");
+	QueryUtils::setValue(notify, "ErrorMessage", "Match changed");
 
 	QueryUtils::footerBuilding(notify);
 
