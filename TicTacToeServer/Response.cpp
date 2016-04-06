@@ -77,14 +77,14 @@ void Response::createMatch(Server* server, createMatchResponseQuery query) {
 		for (std::vector<Participant>::iterator it = participantsList.begin(); it != participantsList.end(); ++it)
 		{
 
-			if (it->player == nullptr) continue;
+			
 
 			if (it->state == ParticipantState::INVITED_ANYONE){
 
 				tmpPlayer = "ANYBODY";
 
 			}
-			else
+			else if (it->player != nullptr)
 			{
 
 				tmpPlayer = it->player->getName();
