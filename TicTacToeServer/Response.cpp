@@ -12,9 +12,13 @@ void Response::getIdentity(Server* server, getIdentityResponseQuery query) {
 
 	QueryUtils::headerBuilding(response);
 
-	QueryUtils::setValue(response, "Response", "getIdentity");
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
 
-	QueryUtils::setValue(response, "Pseudo", query.pseudo);
+		QueryUtils::setValue(response, "Response", "getIdentity");
+
+		QueryUtils::setValue(response, "Pseudo", query.pseudo);
+
+	}
 
 	QueryUtils::setErrors(response, query.queryErrors);
 
@@ -30,9 +34,13 @@ void Response::setIdentity(Server* server, setIdentityResponseQuery query){
 
 	QueryUtils::headerBuilding(response);
 
-	QueryUtils::setValue(response, "Response", "setIdentity");
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
 
-	QueryUtils::setValue(response, "Pseudo", query.pseudo);
+		QueryUtils::setValue(response, "Response", "setIdentity");
+
+		QueryUtils::setValue(response, "Pseudo", query.pseudo);
+
+	}
 
 	QueryUtils::setErrors(response, query.queryErrors);
 
@@ -46,52 +54,57 @@ void Response::createMatch(Server* server, createMatchResponseQuery query) {
 
 	std::string response = "";
 
-	std::stringstream playersList_stream;
-
-	int i = 0;
-
-	std::string tmpPlayer = "";
-
-	for (std::vector<Participant>::iterator it = query.match->getParticipantsList().begin(); it != query.match->getParticipantsList().end(); ++it)
-	{
-
-		if (it->player == nullptr) continue;
-
-		if (it->state == ParticipantState::INVITED_ANYONE){
-
-			tmpPlayer = "ANYBODY";
-
-		}
-		else
-		{
-
-			tmpPlayer == it->player->getName();
-
-		}
-
-		if (i == 0){
-
-			playersList_stream << tmpPlayer;
-
-		}
-
-		playersList_stream << " | " << tmpPlayer;
-
-		i++;
-
-	}
-
 	QueryUtils::headerBuilding(response);
 
-	QueryUtils::setValue(response, "Response", "createMatch");
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
 
-	//TODO mettre un id dans match
+		QueryUtils::setValue(response, "Response", "createMatch");
 
-	//QueryUtils::setValue(response, "MatchId", query.match);
-	QueryUtils::setValue(response, "GridWidth", query.match->getGrid()->getGridWidth());
-	QueryUtils::setValue(response, "GridHeight", query.match->getGrid()->getGridHeight());
-	QueryUtils::setValue(response, "PseudoPlayers", playersList_stream.str());
-	//QueryUtils::setValue(response, "WinSize", query.match->getGrid()); //TODO getter win size
+		//TODO mettre un id dans match
+
+		//QueryUtils::setValue(response, "MatchId", query.match);
+		QueryUtils::setValue(response, "GridWidth", query.match->getGrid()->getGridWidth());
+		QueryUtils::setValue(response, "GridHeight", query.match->getGrid()->getGridHeight());
+
+		std::stringstream playersList_stream;
+
+		int i = 0;
+
+		std::string tmpPlayer = "";
+
+		for (std::vector<Participant>::iterator it = query.match->getParticipantsList().begin(); it != query.match->getParticipantsList().end(); ++it)
+		{
+
+			if (it->player == nullptr) continue;
+
+			if (it->state == ParticipantState::INVITED_ANYONE){
+
+				tmpPlayer = "ANYBODY";
+
+			}
+			else
+			{
+
+				tmpPlayer == it->player->getName();
+
+			}
+
+			if (i == 0){
+
+				playersList_stream << tmpPlayer;
+
+			}
+
+			playersList_stream << " | " << tmpPlayer;
+
+			i++;
+
+		}
+
+		QueryUtils::setValue(response, "PseudoPlayers", playersList_stream.str());
+		//QueryUtils::setValue(response, "WinSize", query.match->getGrid()); //TODO getter win size
+
+	}
 
 	QueryUtils::setErrors(response, query.queryErrors);
 
@@ -107,44 +120,48 @@ void Response::getMatchList(Server* server, getMatchListResponseQuery query) {
 
 	QueryUtils::headerBuilding(response);
 
-	QueryUtils::setValue(response, "Response", "getMatchList");
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
 
-	QueryUtils::setValue(response, "MatchCount", query.matchesList.size());
+		QueryUtils::setValue(response, "Response", "getMatchList");
 
-	std::stringstream matchList_stream;
-	int i = 0;
-	std::string jouable = "-1";
+		QueryUtils::setValue(response, "MatchCount", query.matchesList.size());
 
-	for (std::map<unsigned int, Match*>::iterator it = query.matchesList.begin(); it != query.matchesList.end(); ++it)
-	{
+		std::stringstream matchList_stream;
+		int i = 0;
+		std::string jouable = "-1";
 
-		if (it->second == nullptr) continue;
-
-		if (it->second->getCurrentPlayer() != query.clients.at(0))
+		for (std::map<unsigned int, Match*>::iterator it = query.matchesList.begin(); it != query.matchesList.end(); ++it)
 		{
 
-			jouable = "0";
+			if (it->second == nullptr) continue;
+
+			if (it->second->getCurrentPlayer() != query.clients.at(0))
+			{
+
+				jouable = "0";
+
+			}
+			else{
+
+				jouable = "1";
+
+			}
+
+			if (i == 0){
+
+				matchList_stream << it->second->getId() << ":" << jouable;
+
+			}
+
+			matchList_stream << " | " << it->second->getId() << ":" << jouable;
+
+			i++;
 
 		}
-		else{
 
-			jouable = "1";
-
-		}
-
-		if (i == 0){
-
-			matchList_stream << it->second->getId() << ":" << jouable;
-
-		}
-
-		matchList_stream << " | " << it->second->getId() << ":" << jouable;
-
-		i++;
+		QueryUtils::setValue(response, "MatchList", matchList_stream.str());
 
 	}
-
-	QueryUtils::setValue(response, "MatchList", matchList_stream.str());
 
 	QueryUtils::setErrors(response, query.queryErrors);
 
@@ -160,123 +177,126 @@ void Response::getMatchInformation(Server* server, getMatchInformationResponseQu
 
 	QueryUtils::headerBuilding(response);
 
-	QueryUtils::setValue(response, "Response", "getMatchInformation");
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
 
-	QueryUtils::setValue(response, "MatchId", query.match->getId());
+		QueryUtils::setValue(response, "Response", "getMatchInformation");
 
-	std::string tmp = "-1";
+		QueryUtils::setValue(response, "MatchId", query.match->getId());
 
-	if (query.match->getCurrentPlayer() != query.clients.at(0))
-	{
+		std::string tmp = "-1";
 
-		tmp = "0";
+		if (query.match->getCurrentPlayer() != query.clients.at(0))
+		{
 
-	}
-	else{
+			tmp = "0";
 
-		tmp = "1";
+		}
+		else{
 
-	}
+			tmp = "1";
 
-	QueryUtils::setValue(response, "DoYouPlay", tmp);
+		}
 
-	if (query.match->canPlayerJoin(query.clients.at(0)))
-	{
+		QueryUtils::setValue(response, "DoYouPlay", tmp);
 
-		tmp = "1";
+		if (query.match->canPlayerJoin(query.clients.at(0)))
+		{
 
-	}
-	else{
+			tmp = "1";
 
-		tmp = "0";
+		}
+		else{
 
-	}
+			tmp = "0";
 
-	QueryUtils::setValue(response, "CanYouJoin", tmp);
+		}
 
-	std::stringstream grid_stream;
+		QueryUtils::setValue(response, "CanYouJoin", tmp);
 
-	for (int i = 0; i < query.match->getGrid()->getGridHeight(); i++){
+		std::stringstream grid_stream;
 
-		for (int j = 0; i < query.match->getGrid()->getGridWidth(); j++){
+		for (int i = 0; i < query.match->getGrid()->getGridHeight(); i++){
 
-			if (i != 0 || j != 0)
-				grid_stream << "|";
+			for (int j = 0; i < query.match->getGrid()->getGridWidth(); j++){
 
-			if (query.match->getGrid()->getGrid()[j][i] == nullptr){
+				if (i != 0 || j != 0)
+					grid_stream << "|";
 
-				grid_stream << "|";
+				if (query.match->getGrid()->getGrid()[j][i] == nullptr){
+
+					grid_stream << "|";
+
+				}
+				else
+				{
+
+					grid_stream << query.match->getGrid()->getGrid()[j][i]->getName();
+
+				}
+
+			}
+
+		}
+
+		QueryUtils::setValue(response, "Grid", grid_stream.str());
+		QueryUtils::setValue(response, "grid_width", query.match->getGrid()->getGridWidth());
+		QueryUtils::setValue(response, "grid_height", query.match->getGrid()->getGridHeight());
+
+		std::stringstream playersList_stream;
+
+		int i = 0;
+
+		std::string tmpPlayer = "";
+
+		for (std::vector<Participant>::iterator it = query.match->getParticipantsList().begin(); it != query.match->getParticipantsList().end(); ++it)
+		{
+
+			if (it->player == nullptr) continue;
+
+			if (it->player == query.clients.at(0)){
+
+				playersList_stream << "*";
+
+			}
+			else if (it->state == LEFT){
+
+				playersList_stream << "!";
+
+			}
+			else if (it->state == INVITED_PLAYER || it->state == INVITED_ANYONE){
+
+				playersList_stream << "?";
+
+			}
+
+			if (it->state == ParticipantState::INVITED_ANYONE){
+
+				tmpPlayer = "ANYBODY";
 
 			}
 			else
 			{
 
-				grid_stream << query.match->getGrid()->getGrid()[j][i]->getName();
+				tmpPlayer == it->player->getName();
 
 			}
-			
-		}
-		
-	}
 
-	QueryUtils::setValue(response, "Grid", grid_stream.str());
-	QueryUtils::setValue(response, "grid_width", query.match->getGrid()->getGridWidth());
-	QueryUtils::setValue(response, "grid_height", query.match->getGrid()->getGridHeight());
+			if (i == 0){
 
-	std::stringstream playersList_stream;
+				playersList_stream << tmpPlayer;
 
-	int i = 0;
+			}
 
-	std::string tmpPlayer = "";
+			playersList_stream << " | " << tmpPlayer;
 
-	for (std::vector<Participant>::iterator it = query.match->getParticipantsList().begin(); it != query.match->getParticipantsList().end(); ++it)
-	{
-
-		if (it->player == nullptr) continue;
-
-		if (it->player == query.clients.at(0)){
-
-			playersList_stream << "*";
-
-		}
-		else if (it->state == LEFT){
-
-			playersList_stream << "!";
-
-		}
-		else if (it->state == INVITED_PLAYER || it->state == INVITED_ANYONE){
-
-			playersList_stream << "?";
+			i++;
 
 		}
 
-		if (it->state == ParticipantState::INVITED_ANYONE){
-
-			tmpPlayer = "ANYBODY";
-
-		}
-		else
-		{
-
-			tmpPlayer == it->player->getName();
-
-		}
-
-		if (i == 0){
-
-			playersList_stream << tmpPlayer;
-
-		}
-
-		playersList_stream << " | " << tmpPlayer;
-
-		i++;
+		QueryUtils::setValue(response, "players", playersList_stream.str());
+		QueryUtils::setValue(response, "state", query.match->getState());
 
 	}
-
-	QueryUtils::setValue(response, "players", playersList_stream.str());
-	QueryUtils::setValue(response, "state", query.match->getState());
-	
 
 	QueryUtils::setErrors(response, query.queryErrors);
 
@@ -291,25 +311,29 @@ void Response::joinMatch(Server* server, joinMatchResponseQuery query) {
 	std::string response = "";
 
 	QueryUtils::headerBuilding(response);
-	
-	QueryUtils::setValue(response, "Response", "joinMatch");
 
-	QueryUtils::setValue(response, "MatchId", query.match->getId());
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
 
-	std::string mode = "";
+		QueryUtils::setValue(response, "Response", "joinMatch");
 
-	if (query.isPlayerMode == 1){
+		QueryUtils::setValue(response, "MatchId", query.match->getId());
 
-		mode = "PLAYER";
+		std::string mode = "";
+
+		if (query.isPlayerMode == 1){
+
+			mode = "PLAYER";
+
+		}
+		else{
+
+			mode = "SPECTATOR";
+
+		}
+
+		QueryUtils::setValue(response, "Mode", mode);
 
 	}
-	else{
-
-		mode = "SPECTATOR";
-
-	}
-
-	QueryUtils::setValue(response, "Mode", mode);
 
 	QueryUtils::setErrors(response, query.queryErrors);
 
@@ -324,121 +348,125 @@ void Response::playMatch(Server* server, playMatchResponseQuery query) {
 	std::string response = "";
 
 	QueryUtils::headerBuilding(response);
-	
-	QueryUtils::setValue(response, "Response", "setIdentity");
 
-	QueryUtils::setValue(response, "MatchId", query.match->getId());
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
 
-	std::stringstream grid_stream;
+		QueryUtils::setValue(response, "Response", "playMatch");
 
-	for (int i = 0; i < query.match->getGrid()->getGridHeight(); i++){
+		QueryUtils::setValue(response, "MatchId", query.match->getId());
 
-		for (int j = 0; i < query.match->getGrid()->getGridWidth(); j++){
+		std::stringstream grid_stream;
 
-			if (i != 0 || j != 0)
-				grid_stream << "|";
+		for (int i = 0; i < query.match->getGrid()->getGridHeight(); i++){
 
-			if (query.match->getGrid()->getGrid()[j][i] == nullptr){
+			for (int j = 0; i < query.match->getGrid()->getGridWidth(); j++){
 
-				grid_stream << "|";
+				if (i != 0 || j != 0)
+					grid_stream << "|";
+
+				if (query.match->getGrid()->getGrid()[j][i] == nullptr){
+
+					grid_stream << "|";
+
+				}
+				else
+				{
+
+					grid_stream << query.match->getGrid()->getGrid()[j][i]->getName();
+
+				}
+
+			}
+
+		}
+
+		QueryUtils::setValue(response, "Grid", grid_stream.str());
+
+		std::stringstream playersList_stream;
+		std::string tmpPlayer = "";
+		int i = 0;
+
+		for (std::vector<Participant>::iterator it = query.match->getParticipantsList().begin(); it != query.match->getParticipantsList().end(); ++it)
+		{
+
+			if (it->player == nullptr) continue;
+
+			if (it->player == query.clients.at(0)){
+
+				playersList_stream << "*";
+
+			}
+			else if (it->state == LEFT){
+
+				playersList_stream << "!";
+
+			}
+			else if (it->state == INVITED_PLAYER || it->state == INVITED_ANYONE){
+
+				playersList_stream << "?";
+
+			}
+
+			if (it->state == ParticipantState::INVITED_ANYONE){
+
+				tmpPlayer = "ANYBODY";
 
 			}
 			else
 			{
 
-				grid_stream << query.match->getGrid()->getGrid()[j][i]->getName();
+				tmpPlayer == it->player->getName();
+
+			}
+
+			if (i == 0){
+
+				playersList_stream << tmpPlayer;
+
+			}
+
+			playersList_stream << " | " << tmpPlayer;
+
+			i++;
+
+		}
+
+		QueryUtils::setValue(response, "Players", playersList_stream.str());
+
+		std::string result = "";
+
+		if (query.match->getState() == FINISHED){
+
+			if (query.match->getWinner().player == query.clients.at(0)){
+
+				result = "YOU_WIN";
+
+			}
+			else{
+
+				result = "YOU_LOOSE";
+
+			}
+
+		}
+		else{
+
+			if (query.match->getCurrentPlayer() == query.clients.at(0)){
+
+				result = "YOU_PLAY";
+
+			}
+			else{
+
+				result = "YOU_WAIT";
 
 			}
 
 		}
 
-	}
-
-	QueryUtils::setValue(response, "Grid", grid_stream.str());
-
-	std::stringstream playersList_stream;
-	std::string tmpPlayer = "";
-	int i = 0;
-
-	for (std::vector<Participant>::iterator it = query.match->getParticipantsList().begin(); it != query.match->getParticipantsList().end(); ++it)
-	{
-
-		if (it->player == nullptr) continue;
-
-		if (it->player == query.clients.at(0)){
-
-			playersList_stream << "*";
-
-		}
-		else if (it->state == LEFT){
-
-			playersList_stream << "!";
-
-		}
-		else if (it->state == INVITED_PLAYER || it->state == INVITED_ANYONE){
-
-			playersList_stream << "?";
-
-		}
-
-		if (it->state == ParticipantState::INVITED_ANYONE){
-
-			tmpPlayer = "ANYBODY";
-
-		}
-		else
-		{
-
-			tmpPlayer == it->player->getName();
-
-		}
-
-		if (i == 0){
-
-			playersList_stream << tmpPlayer;
-
-		}
-
-		playersList_stream << " | " << tmpPlayer;
-
-		i++;
+		QueryUtils::setValue(response, "Result", result);
 
 	}
-
-	QueryUtils::setValue(response, "Players", playersList_stream.str());
-
-	std::string result = "";
-
-	if (query.match->getState() == FINISHED){
-
-		if (query.match->getWinner().player == query.clients.at(0)){
-
-			result = "YOU_WIN";
-
-		}
-		else{
-
-			result = "YOU_LOOSE";
-
-		}
-
-	}
-	else{
-
-		if (query.match->getCurrentPlayer() == query.clients.at(0)){
-
-			result = "YOU_PLAY";
-
-		}
-		else{
-
-			result = "YOU_WAIT";
-
-		}
-
-	}
-
-	QueryUtils::setValue(response, "Result", result);
 
 	QueryUtils::setErrors(response, query.queryErrors);
 
@@ -453,10 +481,14 @@ void Response::resetMatch(Server* server, resetMatchResponseQuery query) {
 	std::string response = "";
 
 	QueryUtils::headerBuilding(response);
-	
-	QueryUtils::setValue(response, "Response", "resetMatch");
 
-	QueryUtils::setValue(response, "MatchId", query.match->getId());
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
+
+		QueryUtils::setValue(response, "Response", "resetMatch");
+
+		QueryUtils::setValue(response, "MatchId", query.match->getId());
+
+	}
 
 	QueryUtils::setErrors(response, query.queryErrors);
 
@@ -471,10 +503,14 @@ void Response::quitMatch(Server* server, quitMatchResponseQuery query) {
 	std::string response = "";
 
 	QueryUtils::headerBuilding(response);
-	
-	QueryUtils::setValue(response, "Response", "quitMatch");
 
-	QueryUtils::setValue(response, "MatchId", query.match->getId());
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
+
+		QueryUtils::setValue(response, "Response", "quitMatch");
+
+		QueryUtils::setValue(response, "MatchId", query.match->getId());
+
+	}
 
 	QueryUtils::setErrors(response, query.queryErrors);
 
@@ -489,11 +525,15 @@ void Response::getPlayerInformation(Server* server, getPlayerInformationResponse
 	std::string response = "";
 
 	QueryUtils::headerBuilding(response);
-	
-	QueryUtils::setValue(response, "Response", "getPlayerInformation");
 
-	QueryUtils::setValue(response, "Pseudo", query.clients.at(0)->getName());
-	QueryUtils::setValue(response, "GlobalScore", query.clients.at(0)->getGlobalScore());
+	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
+
+		QueryUtils::setValue(response, "Response", "getPlayerInformation");
+
+		QueryUtils::setValue(response, "Pseudo", query.clients.at(0)->getName());
+		QueryUtils::setValue(response, "GlobalScore", query.clients.at(0)->getGlobalScore());
+
+	}
 
 	QueryUtils::setErrors(response, query.queryErrors);
 
