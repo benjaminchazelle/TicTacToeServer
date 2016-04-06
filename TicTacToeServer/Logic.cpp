@@ -225,8 +225,10 @@ bool Logic::routeRequest(Player* ClientPlayer, std::string requestQuery) {
 
 		ParsedEntity<int> match = QueryUtils::getIntParsing(bufferedQuery);
 
-		if (match.error || match.key != "match")
+		if (match.error || match.key != "MatchId")
 			return false;
+
+
 
 		if(QueryUtils::footerParsing(bufferedQuery)) {
 
@@ -242,22 +244,51 @@ bool Logic::routeRequest(Player* ClientPlayer, std::string requestQuery) {
 
 	}
 
+	else if(method.value == "joinMatch") {
+
+
+		ParsedEntity<int> match = QueryUtils::getIntParsing(bufferedQuery);
+
+		if (match.error || match.key != "MatchId")
+			return false;
+
+		ParsedEntity<std::string> mode = QueryUtils::getStringParsing(bufferedQuery);
+
+		if (mode.error || mode.key != "Mode")
+			return false;
+
+		if(QueryUtils::footerParsing(bufferedQuery)) {
+
+			joinMatchRequestQuery query;
+
+			query.match = match.value;
+
+			query.mode = mode.value;
+
+			query.sender = ClientPlayer;
+
+			Request::joinMatch(this->server, query);
+
+		}
+
+	}
+
 	else if (method.value == "playMatch") {
 
 
 		ParsedEntity<int> match = QueryUtils::getIntParsing(bufferedQuery);
 
-		if (match.error || match.key != "match")
+		if (match.error || match.key != "MatchId")
 			return false;
 
 		ParsedEntity<int> coordinate_x = QueryUtils::getIntParsing(bufferedQuery);
 
-		if (coordinate_x.error || coordinate_x.key != "coordinate_x")
+		if (coordinate_x.error || coordinate_x.key != "CoordinateX")
 			return false;
 
 		ParsedEntity<int> coordinate_y = QueryUtils::getIntParsing(bufferedQuery);
 
-		if (coordinate_y.error || coordinate_y.key != "coordinate_y")
+		if (coordinate_y.error || coordinate_y.key != "CoordinateY")
 			return false;
 
 
@@ -284,7 +315,7 @@ bool Logic::routeRequest(Player* ClientPlayer, std::string requestQuery) {
 
 		ParsedEntity<int> match = QueryUtils::getIntParsing(bufferedQuery);
 
-		if (match.error || match.key != "MonAttributInt")
+		if (match.error || match.key != "MatchId")
 			return false;
 
 		if (QueryUtils::footerParsing(bufferedQuery)) {
@@ -306,7 +337,7 @@ bool Logic::routeRequest(Player* ClientPlayer, std::string requestQuery) {
 
 		ParsedEntity<int> match = QueryUtils::getIntParsing(bufferedQuery);
 
-		if (match.error || match.key != "MonAttributInt")
+		if (match.error || match.key != "MatchId")
 			return false;
 
 		if (QueryUtils::footerParsing(bufferedQuery)) {
@@ -327,7 +358,7 @@ bool Logic::routeRequest(Player* ClientPlayer, std::string requestQuery) {
 
 		ParsedEntity<std::string> player= QueryUtils::getStringParsing(bufferedQuery);
 
-		if (player.error || player.key != "MonAttributString")
+		if (player.error || player.key != "Pseudo")
 			return false;
 
 
@@ -361,7 +392,7 @@ bool QueryUtils::footerParsing(std::string &bufferedQuery) {
 
 Match* Logic::addMatch(unsigned int _gridWidth, unsigned int _gridHeight, unsigned int _winSize, std::vector<Participant> _participantsList) {
 
-	Match* match = new Match(_gridWidth, _gridHeight, _winSize, _participantsList);
+	Match* match = new Match(_gridWidth, _gridHeight, _winSize, _participantsList, server->getLogic());
 
 	this->matchsList[match->getId()] = match;
 

@@ -49,6 +49,8 @@ private:
    static unsigned int LastIDGiven;
    const unsigned int currentID;
 
+	std::vector<Player*> spectatorsList;
+
 	std::vector<Participant> participantsList;
 	Grid* grid;
 
@@ -71,10 +73,12 @@ public:
 
 	Grid* getGrid();
 
+	void addSpectator(Player* spectator);
+
 	Status inviteParticipant(Participant participant);
 
-	bool onMatchAccepted(Player* player);
-	bool onMatchDeserted(Player* player);
+	Status onMatchAccepted(Player* player);
+	Status onMatchDeserted(Player* player);
 
 	Status play(Player* player, unsigned int x, unsigned int y);
 
@@ -95,7 +99,7 @@ public:
 	std::vector<Participant>::iterator findParticipant(Player* player);
 	bool ThisPlayerIsParticipant(Player* player);
 
-	void resetMatch(Player* player); //TODO véirifer que le gars qu idemande est dans la partie
+	Status resetMatch(Player* player); //TODO véirifer que le gars qu idemande est dans la partie
 
 	void closeMatch();
 

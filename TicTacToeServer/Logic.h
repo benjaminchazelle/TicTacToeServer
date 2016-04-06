@@ -9,6 +9,8 @@
 #include <pthread.h>
 #include <time.h>
 
+#include "Match.h"
+
 #include <string>
 #include <iostream>
 
@@ -49,6 +51,7 @@
 class Server;
 class Match;
 class Player;
+struct Participant;
 
 class Logic
 {

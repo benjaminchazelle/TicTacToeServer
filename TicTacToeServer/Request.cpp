@@ -31,7 +31,7 @@ void Request::setIdentity(Server* server, setIdentityRequestQuery query) {
 
 	if(!validPseudoFormat)
 		errors.addError(2, "Pseudo must respect the [a-z0-9]+ format");
-	
+
 	if(pseudoAvailable && validPseudoFormat) {
 
 		query.sender->setName(query.pseudo);
@@ -64,18 +64,18 @@ void Request::getIdentity(Server* server, getIdentityRequestQuery query) {
 }
 
 void Request::createMatch(Server* server, createMatchRequestQuery query) {
-	
+
 	//Tester la taille de la grille
 
 	//Tester la taille de la winsize, supérieur ou égale à 3, et que cette valeur soit possible à atteindre
 	//Ex : dans une grille 3 x 3, on ne peut pas aligner 4 pions
 
 	//Tester si les players sont valides, pseudos bien formatés...
-	
+
 	createMatchResponseQuery response;
 	Errors errors(3);
 
-	
+
 	bool validGridSize = query.gridWidth >= 3 && query.gridHeight >= 3;
 
 	bool validWinSize = query.winSize >= 3 && query.winSize <= min(query.gridWidth, query.gridHeight);
@@ -91,7 +91,7 @@ void Request::createMatch(Server* server, createMatchRequestQuery query) {
 		Participant participant;
 
 		if(*it == "ANYBODY") {
-	
+
 			participant.player = nullptr;
 			participant.state = ParticipantState::INVITED_ANYONE;
 		}
@@ -105,7 +105,7 @@ void Request::createMatch(Server* server, createMatchRequestQuery query) {
 		}
 
 		participantsList.push_back(participant);
-		
+
 	}
 
 	if(!validParticipants)
@@ -124,6 +124,7 @@ void Request::createMatch(Server* server, createMatchRequestQuery query) {
 		errors.addError(0, "Match successfuly created");
 
 	}
+
 
 	response.clients = Response::unicastHelper(query.sender);
 	response.queryErrors = errors;
@@ -160,7 +161,9 @@ void Request::getMatchInformation(Server* server, getMatchInformationRequestQuer
 	getMatchInformationResponseQuery response;
 	Errors errors(5);
 
-	bool matchExists = server->getLogic()->getMatchsList()[query.match] != nullptr;
+	Match* match =  server->getLogic()->getMatchsList()[query.match] ;
+
+	bool matchExists = match != nullptr;
 
 	if(!matchExists) {
 		errors.addError(1, "Match does not exist");
@@ -169,7 +172,7 @@ void Request::getMatchInformation(Server* server, getMatchInformationRequestQuer
 	else {
 		errors.addError(0, "Information about the game have been fetch successfuly");
 
-		response.match = server->getLogic()->getMatchsList()[query.match];
+		response.match = match;
 	}
 
 	response.clients = Response::unicastHelper(query.sender);
@@ -183,18 +186,123 @@ void Request::getMatchInformation(Server* server, getMatchInformationRequestQuer
 
 void Request::joinMatch(Server* server, joinMatchRequestQuery query) {
 
-	//Tester si le match existe
+	joinMatchResponseQuery response;
+	Errors errors(6);
 
-	//Tester si le mode de suivit existe "PLAYER" ou "SPECTATOR"
+	Match* match = server->getLogic()->getMatchsList()[query.match];
 
-	//Tester si le joueur est invité dans la partie
+	bool matchExists = match != nullptr;
 
-	//Tester si il y a assez dez place dans la partie (dans le cas où l'utilisateur pouvait rejoindre la partie?)
+	bool isPlayerMode = query.mode == "PLAYER";
+	bool validMode = isPlayerMode || query.mode == "SPECTATOR";
+
+	if(!matchExists) {
+		errors.addError(1, "Match does not exist");
+	}
+	else {
+
+		if(!validMode) {
+			errors.addError(2, "Incorrect mode");
+		}
+		else {
+
+			response.isPlayerMode = isPlayerMode;
+			response.match = match;
+
+			if(isPlayerMode) {
+
+				Status matchInvitationStatus = query.sender->acceptMatchInvitation(match);
+
+				if(matchInvitationStatus == Status::MATCH_USER_ACCEPTED)
+					errors.addError(0, "You have join the match");
+				if(matchInvitationStatus == Status::MATCH_USER_ALREADY_INNER)
+					errors.addError(3, "You are already in this match");
+				else if(matchInvitationStatus == Status::MATCH_NOT_INVITED)
+					errors.addError(4, "You are not invited in this match or unassigned place taken");
+				else if(matchInvitationStatus == Status::MATCH_EVER_STARTED_OR_FINISHED)
+					errors.addError(5, "The match ever started or finished");
+
+			}
+			else {
+
+
+				match->addSpectator(query.sender);
+
+				
+
+				errors.addError(0, "You have join the match");
+
+			}
+
+
+		}
+
+	}
+
+	response.clients = Response::unicastHelper(query.sender);
+
+	response.queryErrors = errors;
+
+
+	Response::joinMatch(server, response);
 
 	std::cout << "*joinMatch" << std::endl;
 }
 
 void Request::playMatch(Server* server, playMatchRequestQuery query) {
+
+	playMatchResponseQuery response;
+	Errors errors(7);
+
+	Match* match = server->getLogic()->getMatchsList()[query.match];
+
+	bool matchExists = match != nullptr;
+
+	if(!matchExists) {
+
+		errors.addError(1, "Match does not exist");
+
+	}
+	else {
+
+
+
+		Status strokeStatus = match->play(query.sender, query.coordinate_x, query.coordinate_y);
+
+		switch(strokeStatus){
+
+		case MATCH_STROKE_DONE:
+			errors.addError(0, "Your move have been done with success");
+			break;
+
+		case MATCH_NOT_STARTED:
+			errors.addError(4, "The game is not in progress");
+			break;
+
+		case MATCH_PLAYER_IS_NOT_PARTICIPANT:
+			errors.addError(6, "You are not in the match");
+			break;
+
+		case MATCH_NOT_PLAYED_BY_CURRENT_PLAYER:
+			errors.addError(5, "This is not your turn");
+			break;
+
+		case MATCH_INCORRECT_STROKE:
+			errors.addError(2, "Coordinates are incorrect");
+			break;
+
+		default:
+
+			errors.addError(3, "You can not play on this case");
+		}
+
+	}
+
+	response.clients = Response::unicastHelper(query.sender);
+
+	response.queryErrors = errors;
+
+	Response::playMatch(server, response);
 
 	//Tester si la partie est finie
 
@@ -209,23 +317,135 @@ void Request::playMatch(Server* server, playMatchRequestQuery query) {
 
 void Request::resetMatch(Server* server, resetMatchRequestQuery query) {
 
-	//Tester si le match existe
+	resetMatchResponseQuery response;
+	Errors errors(8);
+
+	Match* match = server->getLogic()->getMatchsList()[query.match];
+
+	bool matchExists = match != nullptr;
+
+	if(!matchExists) {
+		errors.addError(1, "Match does not exist");
+
+	}
+	else {
+
+		Status resetMacthStatus = match->resetMatch(query.sender);
+		
+		switch(resetMacthStatus) {
+
+		case MATCH_RESETED:
+			response.match = match;
+			errors.addError(0, "Restart of the game have been done");
+			break;
+
+		case MATCH_PLAYER_IS_NOT_PARTICIPANT:
+			errors.addError(2, "You are not is the match");
+			break;
+
+		case WAITING_PLAYERS:
+			errors.addError(1, "The match ever started or finished");
+			break;
+
+		}
+
+
+		response.match = server->getLogic()->getMatchsList()[query.match];
+	}
+
+	response.clients = Response::unicastHelper(query.sender);
+
+	response.queryErrors = errors;
+
+	Response::resetMatch(server, response);
+
 
 	std::cout << "*resetMatch" << std::endl;
 }
 
 void Request::quitMatch(Server* server, quitMatchRequestQuery query) {
 
-	//Tester si le match existe
+	quitMatchResponseQuery response;
+	Errors errors(9);
+
+	Match* match = server->getLogic()->getMatchsList()[query.match];
+
+	bool matchExists = match != nullptr;
+
+	if(!matchExists) {
+		errors.addError(1, "Match does not exist");
+
+	}
+	else {
+
+		Status resetMacthStatus = match->resetMatch(query.sender);
+		
+		switch(resetMacthStatus) {
+
+		case MATCH_DESERTED:
+			errors.addError(0, "You have quit the game … Bad Looser!");
+			break;
+
+		case MATCH_PLAYER_IS_NOT_PARTICIPANT:
+			errors.addError(2, "You are not is the match");
+			break;
+
+		case MATCH_PLAYER_ALREADY_DESERTED:
+			errors.addError(3, "You have already desert the match");
+			break;
+
+		}
+
+		response.match = match;
+	}
+
+	response.clients = Response::unicastHelper(query.sender);
+
+	response.queryErrors = errors;
+
+	Response::quitMatch(server, response);
 
 	std::cout << "*quitMatch" << std::endl;
 }
 
 void Request::getPlayerInformation(Server* server, getPlayerInformationRequestQuery query) {
-	
-	//Tester si le pseudo est au bon format
 
-	//Tester si le joueur existe
+	getPlayerInformationResponseQuery response;
+	Errors errors(10);
+
+	Player* player = server->getLogic()->getPlayer(query.player);;
+
+	bool playersExists = player != nullptr;
+
+	bool validPseudoFormat = std::regex_match (query.player, std::regex("^[a-z0-9]+$"));
+
+	if(!playersExists)
+		errors.addError(1, "The player does not exist");
+
+	if(!validPseudoFormat)
+		errors.addError(2, "Bad syntax of the player’s pseudo");
+
+	if(playersExists && validPseudoFormat) {
+
+		response.player = player;
+
+		errors.addError(0, "You have access to your information");
+
+	}
+
+	response.clients = Response::unicastHelper(query.sender);
+	response.queryErrors = errors;
+
+	Response::getPlayerInformation(server, response);
 
 	std::cout << "*getPlayerInformation" << std::endl;
+}
+
+void Request::nonSense(Server* server, RequestQuery query) {
+
+	ServerQuery response;
+	response.clients =  Response::unicastHelper(query.sender);
+
+	Response::genericError(server, response);
+
 }

@@ -34,6 +34,7 @@ public:
 	static void getPlayerInformation(Server* server, getPlayerInformationRequestQuery query);
 
 
+	static void nonSense(Server* server, RequestQuery query);
 };
 
 #endif

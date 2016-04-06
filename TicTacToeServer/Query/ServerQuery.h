@@ -45,12 +45,13 @@ struct getMatchInformationResponseQuery : ServerQuery {
 
 	Match* match;
 
+
 };
 
 struct joinMatchResponseQuery : ServerQuery {
 
 	Match* match;
-
+	bool isPlayerMode;
 };
 
 struct playMatchResponseQuery : ServerQuery {

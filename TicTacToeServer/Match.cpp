@@ -69,21 +69,21 @@ Status Match::inviteParticipant(Participant invited_participant)
 }
 
 
-bool Match::onMatchAccepted(Player* player)
+Status Match::onMatchAccepted(Player* player)
 {
 	//Si la partie n'a pas commencé
 	//Si le joueur existe
 
 	if(this->state != WAITING_PLAYERS)
-		return false;
+		return Status::MATCH_EVER_STARTED_OR_FINISHED;
 
 	if(player == nullptr)
-		return false;
+		return Status::PLAYER_NOT_EXISTS;
 
 	std::vector<Participant>::iterator place_it = findPlaceToParticipate(player);
 
 	if(place_it == this->participantsList.end()) 
-		return false;
+		return Status::MATCH_NOT_INVITED;
 
 
 	(*place_it).player = player;
@@ -106,23 +106,23 @@ bool Match::onMatchAccepted(Player* player)
 		this->currentPlayer = this->participantsList.at(0).player;
 	}
 
-	return true;
+	return Status::MATCH_USER_ACCEPTED;
 
 
 
 
 }
 
-bool Match::onMatchDeserted(Player* player)
+Status Match::onMatchDeserted(Player* player)
 {
 
 	std::vector<Participant>::iterator participant = this->findParticipant(player);
 
 	if(participant == this->participantsList.end())
-		return false;
+		return Status::MATCH_PLAYER_IS_NOT_PARTICIPANT;
 
 	if(participant->state != ParticipantState::PLAYING)
-		return false;
+		return Status::MATCH_PLAYER_ALREADY_DESERTED;
 
 	participant->player->onMatchRemoved(this);
 
@@ -151,7 +151,7 @@ bool Match::onMatchDeserted(Player* player)
 
 	}
 
-	return true;
+	return Status::MATCH_DESERTED;
 
 
 
@@ -204,8 +204,9 @@ Status Match::play(Player* player, unsigned int x, unsigned int y)
 	if(participant->player != this->currentPlayer)
 		return Status::MATCH_NOT_PLAYED_BY_CURRENT_PLAYER;
 
-	if(!this->grid->play(player, x, y))
-		return Status::MATCH_INVALID_STROKE;
+	Status strokeStatus = this->grid->play(player, x, y);
+	if(strokeStatus != Status::MATCH_STROKE_DONE)
+		return strokeStatus;
 
 	std::vector<Participant>::iterator nextParticipantPlayer = this->getNextParticipantPlayer(participant);
 
@@ -306,13 +307,13 @@ bool Match::ThisPlayerIsParticipant(Player* player)
 	return this->findParticipant(player) != this->participantsList.end();
 }
 
-void Match::resetMatch(Player* player)
+Status Match::resetMatch(Player* player)
 {
 	if(this->state == MatchState::WAITING_PLAYERS)
-		return;
+		return Status::MATCH_NOT_STARTED;
 
 	if(!ThisPlayerIsParticipant(player))
-		return;
+		return Status::MATCH_PLAYER_IS_NOT_PARTICIPANT;
 
 
 	this->state = MatchState::WAITING_PLAYERS;
@@ -326,7 +327,7 @@ void Match::resetMatch(Player* player)
 	this->grid->reset();
 
 	//TODO notifier
-
+	return Status::MATCH_RESETED;
 
 } 
 
@@ -356,4 +357,12 @@ unsigned int Match::getWinSize() {
 
 unsigned int Match::getId() {
 	return this->currentID;
+}
+
+void Match::addSpectator(Player* spectator) {
+
+	if(this->findParticipant(spectator) == this->participantsList.end()) {
+		this->spectatorsList.push_back(spectator);
+	}
+
 }

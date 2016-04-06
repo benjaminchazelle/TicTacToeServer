@@ -264,3 +264,19 @@ std::vector<Player*> Response::multicastHelper(Match* match){
 	return target;
 
 }
+
+void Response::genericError(Server* server, ServerQuery query) {
+
+	std::string response = "";
+
+	QueryUtils::headerBuilding(response);
+
+	QueryUtils::setValue(response, "Response", "genericError");
+
+	QueryUtils::setValue(response, "ErrorCode", "-1");
+	QueryUtils::setValue(response, "ErrorMessage", "This is nonsense !");
+
+	QueryUtils::footerBuilding(response);
+
+	server->sendTo(response, query.clients);
+}

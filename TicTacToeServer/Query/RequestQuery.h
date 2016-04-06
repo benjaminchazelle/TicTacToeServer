@@ -49,7 +49,7 @@ struct getMatchInformationRequestQuery : RequestQuery {
 struct joinMatchRequestQuery : RequestQuery {
 
 	int match;
-
+	std::string mode;
 };
 
 struct playMatchRequestQuery : RequestQuery {

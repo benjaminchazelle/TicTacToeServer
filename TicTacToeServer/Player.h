@@ -44,6 +44,7 @@
 #include <string>
 #include <vector>
 #include "Server.h"
+#include "Status.h"
 
 class Match;
 
@@ -76,8 +77,8 @@ public:
 
 	int getGlobalScore();
 
-	bool acceptMatchInvitation(Match* match);
-	bool quitMatch(Match* match);
+	Status acceptMatchInvitation(Match* match);
+	Status quitMatch(Match* match);
 	
 	void onMatchInvited(Match* match);
 	void onMatchRemoved(Match* match);

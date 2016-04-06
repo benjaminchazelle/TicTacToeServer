@@ -64,30 +64,32 @@ int Player::getGlobalScore()
 	return this->globalScore;
 }
 
-bool Player::acceptMatchInvitation(Match* match) {
+Status Player::acceptMatchInvitation(Match* match) {
 
 	if(match == nullptr)
-		return false;
+		return Status::MATCH_NOT_EXISTS;
 
 	if(this->haveThisMatch(match))
-		return false;
+		return Status::MATCH_USER_ALREADY_INNER;
 
-	if(!match->onMatchAccepted(this)) 
-		return false;
+	Status status_onMatch_Accepted = match->onMatchAccepted(this);
+	if(match->onMatchAccepted(this) != Status::MATCH_USER_ACCEPTED) 
+		return status_onMatch_Accepted;
 
 	this->matchesList.push_back(match);
-	return true;
+	return Status::MATCH_USER_ACCEPTED;
 }
 
-bool Player::quitMatch(Match* match) {
+Status Player::quitMatch(Match* match) {
 
 	if(match == nullptr)
-		return false;
+		return Status::MATCH_NOT_EXISTS;
 
-	if(!match->onMatchDeserted(this))
-		return false;
+	Status onMatchDesertedStatus = match->onMatchDeserted(this);
+	if(onMatchDesertedStatus != Status::MATCH_DESERTED)
+		return onMatchDesertedStatus;
 
-	return true;
+	return Status::MATCH_DESERTED;
 
 }
 

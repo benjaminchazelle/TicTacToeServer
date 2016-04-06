@@ -30,8 +30,12 @@ public:
 	static void resetMatch(Server* server, resetMatchResponseQuery query);
 
 	static void quitMatch(Server* server, quitMatchResponseQuery query);
-
+	
 	static void getPlayerInformation(Server* server, getPlayerInformationResponseQuery query);
+
+
+	
+	static void genericError(Server* server, ServerQuery query);
 
 
 
