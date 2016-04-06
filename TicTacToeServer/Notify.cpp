@@ -132,7 +132,7 @@ void Notify::playMatch(Server* server, playMatchNotifyQuery query) {
 
 		}
 
-		playersList_stream << " | " << tmpPlayer;
+		playersList_stream << "|" << tmpPlayer;
 
 		i++;
 

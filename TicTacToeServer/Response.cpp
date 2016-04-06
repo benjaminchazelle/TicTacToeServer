@@ -155,7 +155,7 @@ void Response::getMatchList(Server* server, getMatchListResponseQuery query) {
 
 			}
 
-			matchList_stream << " | " << it->second->getId() << ":" << jouable;
+			matchList_stream << "|" << it->second->getId() << ":" << jouable;
 
 			i++;
 
@@ -296,7 +296,7 @@ void Response::getMatchInformation(Server* server, getMatchInformationResponseQu
 
 			}
 
-			playersList_stream << " | " << tmpPlayer;
+			playersList_stream << "|" << tmpPlayer;
 
 			i++;
 
@@ -436,7 +436,7 @@ void Response::playMatch(Server* server, playMatchResponseQuery query) {
 
 			}
 
-			playersList_stream << " | " << tmpPlayer;
+			playersList_stream << "|" << tmpPlayer;
 
 			i++;
 
