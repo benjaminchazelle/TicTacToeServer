@@ -453,10 +453,10 @@ void Response::resetMatch(Server* server, resetMatchResponseQuery query) {
 	std::string response = "";
 
 	QueryUtils::headerBuilding(response);
-	//TODO
-	//QueryUtils::setValue(response, "Response", "setIdentity");
+	
+	QueryUtils::setValue(response, "Response", "resetMatch");
 
-	//QueryUtils::setValue(response, "Pseudo", query.pseudo);
+	QueryUtils::setValue(response, "MatchId", query.match->getId());
 
 	QueryUtils::setErrors(response, query.queryErrors);
 
@@ -471,10 +471,10 @@ void Response::quitMatch(Server* server, quitMatchResponseQuery query) {
 	std::string response = "";
 
 	QueryUtils::headerBuilding(response);
-	//TODO
-	//QueryUtils::setValue(response, "Response", "setIdentity");
+	
+	QueryUtils::setValue(response, "Response", "quitMatch");
 
-	//QueryUtils::setValue(response, "Pseudo", query.pseudo);
+	QueryUtils::setValue(response, "MatchId", query.match->getId());
 
 	QueryUtils::setErrors(response, query.queryErrors);
 
@@ -489,12 +489,13 @@ void Response::getPlayerInformation(Server* server, getPlayerInformationResponse
 	std::string response = "";
 
 	QueryUtils::headerBuilding(response);
-	//TODO
-	QueryUtils::setValue(response, "Response", "setIdentity");
+	
+	QueryUtils::setValue(response, "Response", "getPlayerInformation");
 
-	//QueryUtils::setValue(response, "Pseudo", query.pseudo);
+	QueryUtils::setValue(response, "Pseudo", query.clients.at(0)->getName());
+	QueryUtils::setValue(response, "GlobalScore", query.clients.at(0)->getGlobalScore());
 
-	//QueryUtils::setErrors(response, query.queryErrors);
+	QueryUtils::setErrors(response, query.queryErrors);
 
 	QueryUtils::footerBuilding(response);
 
