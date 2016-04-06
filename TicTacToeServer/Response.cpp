@@ -5,6 +5,7 @@
 #include "Player.h"
 #include "Match.h"
 #include <sstream>
+#include "Query\Notify.h"
 
 void Response::getIdentity(Server* server, getIdentityResponseQuery query) {
 
@@ -52,11 +53,14 @@ void Response::setIdentity(Server* server, setIdentityResponseQuery query){
 
 void Response::createMatch(Server* server, createMatchResponseQuery query) {
 
+
 	std::string response = "";
 
 	QueryUtils::headerBuilding(response);
 
 	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
+	
+		std::vector<Participant> participantsList = query.match->getParticipantsList();
 
 		QueryUtils::setValue(response, "Response", "createMatch");
 
@@ -70,7 +74,7 @@ void Response::createMatch(Server* server, createMatchResponseQuery query) {
 
 		std::string tmpPlayer = "";
 
-		for (std::vector<Participant>::iterator it = query.match->getParticipantsList().begin(); it != query.match->getParticipantsList().end(); ++it)
+		for (std::vector<Participant>::iterator it = participantsList.begin(); it != participantsList.end(); ++it)
 		{
 
 			if (it->player == nullptr) continue;
@@ -83,7 +87,7 @@ void Response::createMatch(Server* server, createMatchResponseQuery query) {
 			else
 			{
 
-				tmpPlayer == it->player->getName();
+				tmpPlayer = it->player->getName();
 
 			}
 
@@ -93,7 +97,7 @@ void Response::createMatch(Server* server, createMatchResponseQuery query) {
 
 			}
 
-			playersList_stream << " | " << tmpPlayer;
+			playersList_stream << "|" << tmpPlayer;
 
 			i++;
 
@@ -213,14 +217,19 @@ void Response::getMatchInformation(Server* server, getMatchInformationResponseQu
 
 		std::stringstream grid_stream;
 
-		for (int i = 0; i < query.match->getGrid()->getGridHeight(); i++){
+		Grid* grid = query.match->getGrid();
+		Player*** gridData = grid->getGrid();
 
-			for (int j = 0; i < query.match->getGrid()->getGridWidth(); j++){
+		for (int j = 0; j < grid->getGridHeight(); j++){
+
+			for (int i = 0; i < grid->getGridWidth(); i++){
 
 				if (i != 0 || j != 0)
 					grid_stream << "|";
 
-				if (query.match->getGrid()->getGrid()[j][i] == nullptr){
+				std::cout << gridData << std::endl;
+
+				if (gridData[j][i] == nullptr){
 
 					grid_stream << "|";
 
@@ -228,7 +237,7 @@ void Response::getMatchInformation(Server* server, getMatchInformationResponseQu
 				else
 				{
 
-					grid_stream << query.match->getGrid()->getGrid()[j][i]->getName();
+					grid_stream << gridData[j][i]->getName();
 
 				}
 
@@ -237,8 +246,8 @@ void Response::getMatchInformation(Server* server, getMatchInformationResponseQu
 		}
 
 		QueryUtils::setValue(response, "Grid", grid_stream.str());
-		QueryUtils::setValue(response, "grid_width", query.match->getGrid()->getGridWidth());
-		QueryUtils::setValue(response, "grid_height", query.match->getGrid()->getGridHeight());
+		QueryUtils::setValue(response, "GridWidth", grid->getGridWidth());
+		QueryUtils::setValue(response, "GridHeight", grid->getGridHeight());
 
 		std::stringstream playersList_stream;
 
@@ -246,7 +255,9 @@ void Response::getMatchInformation(Server* server, getMatchInformationResponseQu
 
 		std::string tmpPlayer = "";
 
-		for (std::vector<Participant>::iterator it = query.match->getParticipantsList().begin(); it != query.match->getParticipantsList().end(); ++it)
+		std::vector<Participant> participantsList = query.match->getParticipantsList();
+
+		for (std::vector<Participant>::iterator it = participantsList.begin(); it != participantsList.end(); ++it)
 		{
 
 			if (it->player == nullptr) continue;
@@ -355,9 +366,9 @@ void Response::playMatch(Server* server, playMatchResponseQuery query) {
 
 		std::stringstream grid_stream;
 
-		for (int i = 0; i < query.match->getGrid()->getGridHeight(); i++){
+		for (int j = 0; j < query.match->getGrid()->getGridHeight(); j++){
 
-			for (int j = 0; i < query.match->getGrid()->getGridWidth(); j++){
+			for (int i = 0; i < query.match->getGrid()->getGridWidth(); i++){
 
 				if (i != 0 || j != 0)
 					grid_stream << "|";
@@ -384,7 +395,9 @@ void Response::playMatch(Server* server, playMatchResponseQuery query) {
 		std::string tmpPlayer = "";
 		int i = 0;
 
-		for (std::vector<Participant>::iterator it = query.match->getParticipantsList().begin(); it != query.match->getParticipantsList().end(); ++it)
+		std::vector<Participant> participantsList = query.match->getParticipantsList();
+
+		for (std::vector<Participant>::iterator it = participantsList.begin(); it != participantsList.end(); ++it)
 		{
 
 			if (it->player == nullptr) continue;
@@ -471,6 +484,12 @@ void Response::playMatch(Server* server, playMatchResponseQuery query) {
 	QueryUtils::footerBuilding(response);
 
 	server->sendTo(response, query.clients);
+
+	playMatchNotifyQuery notifyQuery;
+	notifyQuery.clients = Response::multicastHelper(query.match);
+	notifyQuery.match = query.match;
+
+	Notify::playMatch(server, notifyQuery);
 
 }
 
@@ -566,7 +585,9 @@ std::vector<Player*> Response::multicastHelper(Match* match){
 	if (match == nullptr)
 		return target;
 
-	for (std::vector<Participant>::iterator it = match->getParticipantsList().begin(); it != match->getParticipantsList().end(); ++it) {
+	std::vector<Participant> participantsList =  match->getParticipantsList();
+
+	for (std::vector<Participant>::iterator it = participantsList.begin(); it != participantsList.end(); ++it) {
 
 		if (it->player != nullptr)
 			target.push_back(it->player);

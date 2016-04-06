@@ -23,9 +23,9 @@ public:
 	Errors* addError(int errorNumber, std::string errorMessage);
 
 	int getErrorType();
-	std::vector<Error> Errors::getErrors();
+	std::vector<Error> getErrors();
 
 	bool isThereErrorNumber(int errorNumber);
 };
 
-#endif;
+#endif

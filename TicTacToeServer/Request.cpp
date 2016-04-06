@@ -77,7 +77,6 @@ void Request::createMatch(Server* server, createMatchRequestQuery query) {
 	createMatchResponseQuery response;
 	Errors errors(3);
 
-
 	bool validGridSize = query.gridWidth >= 3 && query.gridHeight >= 3;
 
 	bool validWinSize = query.winSize >= 3 && query.winSize <= min(query.gridWidth, query.gridHeight);
@@ -86,11 +85,15 @@ void Request::createMatch(Server* server, createMatchRequestQuery query) {
 
 	std::vector<Participant> participantsList;
 
+	bool matchOwnerInner = false;
+
 	for(std::vector<std::string>::iterator it=query.playersList.begin();it != query.playersList.end();++it) {
 
 		Player* player = server->getLogic()->getPlayer(*it);
 
 		Participant participant;
+
+
 
 		if(*it == "ANYBODY") {
 
@@ -98,8 +101,16 @@ void Request::createMatch(Server* server, createMatchRequestQuery query) {
 			participant.state = ParticipantState::INVITED_ANYONE;
 		}
 		else if(player != nullptr) {
+
 			participant.player = player;
+
+			if(player == query.sender) {
+				matchOwnerInner = true;
+
+			}
+	
 			participant.state = ParticipantState::INVITED_PLAYER;
+			
 		}
 		else {
 			validParticipants = false;
@@ -110,6 +121,17 @@ void Request::createMatch(Server* server, createMatchRequestQuery query) {
 
 	}
 
+	//On rajoute le client créateur du match s'il n y est pas
+	if(!matchOwnerInner) {
+		Participant participant;
+		participant.player = query.sender;
+		participant.state = ParticipantState::PLAYING;
+
+		participantsList.push_back(participant);
+	}
+
+	bool validParticipantsNumber = participantsList.size() >= 2;
+
 	if(!validParticipants)
 		errors.addError(1, "Invalid pseudo in the player list");
 
@@ -118,6 +140,9 @@ void Request::createMatch(Server* server, createMatchRequestQuery query) {
 
 	if(!validGridSize)
 		errors.addError(3, "Pion number for win must be an integer greather than  or equal to 3 and lesser than the minimum grid dimension");
+
+	if(!validParticipantsNumber)
+		errors.addError(4, "Not enough participant");
 
 	if(validParticipants && validGridSize && validGridSize) {
 
@@ -231,7 +256,7 @@ void Request::joinMatch(Server* server, joinMatchRequestQuery query) {
 
 				match->addSpectator(query.sender);
 
-				
+
 
 				errors.addError(0, "You have join the match");
 
@@ -303,6 +328,8 @@ void Request::playMatch(Server* server, playMatchRequestQuery query) {
 
 	response.clients = Response::unicastHelper(query.sender);
 
+	response.match = match;
+
 	response.queryErrors = errors;
 
 	Response::playMatch(server, response);
@@ -334,7 +361,7 @@ void Request::resetMatch(Server* server, resetMatchRequestQuery query) {
 	else {
 
 		Status resetMacthStatus = match->resetMatch(query.sender);
-		
+
 		switch(resetMacthStatus) {
 
 		case MATCH_RESETED:
@@ -382,7 +409,7 @@ void Request::quitMatch(Server* server, quitMatchRequestQuery query) {
 	else {
 
 		Status resetMacthStatus = match->resetMatch(query.sender);
-		
+
 		switch(resetMacthStatus) {
 
 		case MATCH_DESERTED:

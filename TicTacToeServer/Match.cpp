@@ -269,7 +269,7 @@ Player* Match::getCurrentPlayer()
 
 std::vector<Participant> Match::getParticipantsList()
 {
-	return this->participantsList;
+	return participantsList;
 }
 
 MatchState Match::getState()
@@ -280,9 +280,11 @@ MatchState Match::getState()
 Participant Match::getWinner()
 
 {
-	this->grid->getWinner(this->winSize);
-	Participant dbg;
-	return dbg;
+	Player* playerWinner = this->grid->getWinner(this->winSize);
+
+	Participant winner = *this->findParticipant(playerWinner);
+
+	return winner;
 }
 
 bool Match::canPlayerJoin(Player* player)

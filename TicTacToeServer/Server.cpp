@@ -233,7 +233,7 @@ void Server::start() {
 
 			//inform user of socket number - used in send and receive commands
 
-			std::cout << "New connection #" << new_socket << " from" <<  inet_ntoa(address.sin_addr) << ":" << ntohs(address.sin_port) << std::endl;
+			std::cout << "New connection #" << new_socket << " from " <<  inet_ntoa(address.sin_addr) << ":" << ntohs(address.sin_port) << std::endl;
 			/*
 			//send new connection greeting message
 			if( send(new_socket, message, strlen(message), 0) != strlen(message) ) 

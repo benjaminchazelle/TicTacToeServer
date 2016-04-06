@@ -33,7 +33,7 @@ struct Participant {
 	ParticipantState state;
 
 	Participant () : player(nullptr), state(INVITED_ANYONE) {};
-		
+	Participant (const Participant& p) : player(p.player), state(p.state) {};
 };
 
 enum MatchState {
@@ -65,7 +65,7 @@ private:
 
 public:
 
-
+	Match(const Match& m) : grid(m.grid), spectatorsList(m.spectatorsList), participantsList(m.participantsList), winSize(m.winSize), state(m.state), currentPlayer(m.currentPlayer), logic(m.logic), currentID(m.currentID) {}
 
 	Match(unsigned int _gridWidth, unsigned int _gridHeight, unsigned int _winSize, std::vector<Participant> _participantsList, Logic* _logic);
 

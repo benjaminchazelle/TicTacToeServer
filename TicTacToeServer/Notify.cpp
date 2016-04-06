@@ -62,9 +62,9 @@ void Notify::playMatch(Server* server, playMatchNotifyQuery query) {
 
 	std::stringstream grid_stream;
 
-	for (int i = 0; i < query.match->getGrid()->getGridHeight(); i++){
+	for (int j = 0; j < query.match->getGrid()->getGridHeight(); j++){
 
-		for (int j = 0; i < query.match->getGrid()->getGridWidth(); j++){
+		for (int i = 0; i < query.match->getGrid()->getGridWidth(); i++){
 
 			if (i != 0 || j != 0)
 				grid_stream << "|";
@@ -91,7 +91,9 @@ void Notify::playMatch(Server* server, playMatchNotifyQuery query) {
 	std::string tmpPlayer = "";
 	int i = 0;
 
-	for (std::vector<Participant>::iterator it = query.match->getParticipantsList().begin(); it != query.match->getParticipantsList().end(); ++it)
+	std::vector<Participant> participantsList =  query.match->getParticipantsList();
+
+	for (std::vector<Participant>::iterator it = participantsList.begin(); it != participantsList.end(); ++it)
 	{
 
 		if (it->player == nullptr) continue;
@@ -134,6 +136,7 @@ void Notify::playMatch(Server* server, playMatchNotifyQuery query) {
 
 		i++;
 
+	
 	}
 
 	QueryUtils::setValue(notify, "Players", playersList_stream.str());

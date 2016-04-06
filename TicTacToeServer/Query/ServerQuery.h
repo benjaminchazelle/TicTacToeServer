@@ -13,6 +13,9 @@
 struct ServerQuery {
 	Errors queryErrors;
 	std::vector<Player*> clients;
+	/*
+	ServerQuery() {}
+	ServerQuery(const ServerQuery& q) : clients(q.clients), queryErrors(q.queryErrors) {}*/
 };
 
 
@@ -32,6 +35,9 @@ struct getIdentityResponseQuery : ServerQuery {
 struct createMatchResponseQuery : ServerQuery {
 
 	Match* match;
+	/*
+	createMatchResponseQuery() : match(nullptr) {}
+	createMatchResponseQuery(const createMatchResponseQuery& q) : match(q.match) {}*/
 
 };
 
