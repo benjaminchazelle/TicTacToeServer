@@ -63,9 +63,7 @@ void Response::createMatch(Server* server, createMatchResponseQuery query) {
 	if (query.queryErrors.getErrors().size() == 1 && query.queryErrors.getErrors().at(0).errorNumber == 0){
 
 		std::vector<Participant> participantsList = query.match->getParticipantsList();
-
-		QueryUtils::setValue(response, "Response", "createMatch");
-
+		
 		QueryUtils::setValue(response, "MatchId", query.match->getId());
 		QueryUtils::setValue(response, "GridWidth", query.match->getGrid()->getGridWidth());
 		QueryUtils::setValue(response, "GridHeight", query.match->getGrid()->getGridHeight());
