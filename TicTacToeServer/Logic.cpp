@@ -42,6 +42,7 @@ typedef struct in_addr IN_ADDR;
 #include "Query\Request.h"
 
 #include <iostream>
+#include <sstream>
 
 Logic::Logic(Server* _server) : server(_server)
 {
@@ -82,11 +83,18 @@ void Logic::addPlayer(int socket, sockaddr_in address) {
 
 }
 
-void Logic::removePlayer(int socket){
+void Logic::removePlayer(int socket, sockaddr_in address){
 
 	if(this->playersList[socket] != nullptr) {
 
+		std::stringstream ss;
+		ss << inet_ntoa(address.sin_addr) << ":" << ntohs(address.sin_port);
+
+		this->playersList.at(socket)->setName(ss.str());
+
 		this->playersList.at(socket)->disconnect();
+
+
 
 		this->playersList.erase(socket);
 	}
@@ -113,7 +121,7 @@ Player* Logic::getPlayer(std::string pseudo) {
 
 bool Logic::isPseudoAvailable(std::string pseudo) {
 
-	return this->getPlayer(pseudo) != nullptr;
+	return this->getPlayer(pseudo) == nullptr;
 
 };
 

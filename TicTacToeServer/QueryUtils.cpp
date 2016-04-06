@@ -177,7 +177,7 @@ void QueryUtils::setErrors(std::string &response, Errors errors) {
 		for(std::vector<Error>::iterator it=errorsList.begin(); it!=errorsList.end(); ++it) {
 
 			std::stringstream errorMessage_stream;
-			errorMessage_stream << "#" <<errorsList.at(0).errorNumber << " " << errorsList.at(0).errorMessage;
+			errorMessage_stream << "#" << it->errorNumber << " " << it->errorMessage;
 
 			setValue(response, "ErrorMessage", errorMessage_stream.str());
 

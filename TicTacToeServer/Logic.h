@@ -72,7 +72,7 @@ public:
 	std::map<int, Player*> getPlayersList();
 
 	void addPlayer(int socket, sockaddr_in address);
-	void removePlayer(int socket);
+	void removePlayer(int socket, sockaddr_in address);
 	Player* getPlayer(int socket);
 	Player* getPlayer(std::string pseudo);
 

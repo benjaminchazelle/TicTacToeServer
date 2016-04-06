@@ -276,7 +276,7 @@ void Server::start() {
 
 					std::cout << "Client #" << i << " ("<< inet_ntoa(address.sin_addr) <<":"<< ntohs(address.sin_port) << ") disconnected" << std::endl,
 
-						logic->removePlayer(sd);
+						logic->removePlayer(sd, address);
 
 					//Close the socket and mark as 0 in list for reuse
 					close(sd);
