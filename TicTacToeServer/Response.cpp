@@ -227,8 +227,6 @@ void Response::getMatchInformation(Server* server, getMatchInformationResponseQu
 				if (i != 0 || j != 0)
 					grid_stream << "|";
 
-				std::cout << gridData << std::endl;
-
 				if (gridData[j][i] == nullptr){
 
 					grid_stream << "|";
@@ -302,8 +300,8 @@ void Response::getMatchInformation(Server* server, getMatchInformationResponseQu
 
 		}
 
-		QueryUtils::setValue(response, "players", playersList_stream.str());
-		QueryUtils::setValue(response, "state", query.match->getState());
+		QueryUtils::setValue(response, "Players", playersList_stream.str());
+		QueryUtils::setValue(response, "State", query.match->getState());
 
 	}
 

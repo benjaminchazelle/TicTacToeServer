@@ -79,7 +79,7 @@ void Request::createMatch(Server* server, createMatchRequestQuery query) {
 
 	bool validGridSize = query.gridWidth >= 3 && query.gridHeight >= 3;
 
-	bool validWinSize = query.winSize >= 3 && query.winSize <= (std::min)(query.gridWidth, query.gridHeight); /////////////////PARTIE SENSIBLE BIZARRI LINUXIENNE
+	bool validWinSize = query.winSize >= 3 && query.winSize <= (std::min)(query.gridWidth, query.gridHeight); /////////////////PARTIE SENSIBLE BIZARRIE LINUXIENNE
 
 	bool validParticipants = true;
 
