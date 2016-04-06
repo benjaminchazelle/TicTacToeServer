@@ -51,18 +51,18 @@ int Grid::getGridHeight()
 
 
 
-bool Grid::play(Player* player, unsigned int x, unsigned int y)
+Status Grid::play(Player* player, unsigned int x, unsigned int y)
 {
 	if(x >= this->gridWidth || y >= this->gridHeight)
-		return false;
+		return Status::MATCH_INCORRECT_STROKE;
 
 	if(this->gridData[y][x] == nullptr) {
 
 		this->gridData[y][x] = player;
-		return true;
+		return Status::MATCH_STROKE_DONE;
 	}
 
-	return false;
+	return Status::MATCH_UNAVAILABLE_CASE;
 }
 
 Player* Grid::getWinner(unsigned int winSize)

@@ -23,7 +23,7 @@ public:
 
 	void reset();
 
-	bool play(Player* player, unsigned int x, unsigned int y);
+	Status play(Player* player, unsigned int x, unsigned int y);
 
 	Player* getWinner(unsigned int winSize);
 
