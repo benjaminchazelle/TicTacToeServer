@@ -19,8 +19,8 @@ public:
 
 	Player*** getGrid();
 
-	int Grid::getGridWidth();
-	int Grid::getGridHeight();
+	int getGridWidth();
+	int getGridHeight();
 
 	void reset();
 

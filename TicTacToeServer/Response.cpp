@@ -1,11 +1,11 @@
 #include "Server.h"
-#include "Query\Response.h"
-#include "Query\ServerQuery.h"
+#include "Query/Response.h"
+#include "Query/ServerQuery.h"
 #include "QueryUtils.h"
 #include "Player.h"
 #include "Match.h"
 #include <sstream>
-#include "Query\Notify.h"
+#include "Query/Notify.h"
 
 void Response::getIdentity(Server* server, getIdentityResponseQuery query) {
 

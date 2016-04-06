@@ -5,7 +5,7 @@ Grid::Grid(unsigned int _gridWidth, unsigned int _gridHeight) : gridWidth(_gridW
 
 	if(this->gridWidth > 0 && this->gridHeight > 0) {
 
-		unsigned int gridSize = this->gridHeight * this->gridWidth;
+		//unsigned int gridSize = this->gridHeight * this->gridWidth;
 
 
 		this->gridData = new Player**[this->gridHeight];
@@ -54,15 +54,15 @@ int Grid::getGridHeight()
 Status Grid::play(Player* player, unsigned int x, unsigned int y)
 {
 	if(x >= this->gridWidth || y >= this->gridHeight)
-		return Status::MATCH_INCORRECT_STROKE;
+		return MATCH_INCORRECT_STROKE;
 
 	if(this->gridData[y][x] == nullptr) {
 
 		this->gridData[y][x] = player;
-		return Status::MATCH_STROKE_DONE;
+		return MATCH_STROKE_DONE;
 	}
 
-	return Status::MATCH_UNAVAILABLE_CASE;
+	return MATCH_UNAVAILABLE_CASE;
 }
 
 Player* Grid::getWinner(unsigned int winSize)

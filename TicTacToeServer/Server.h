@@ -57,11 +57,11 @@ public:
 	Server(void);
 	~Server(void);
 
-	static void* Server::onClientTalk(void *_args);
+	static void* onClientTalk(void *_args);
 
-	void Server::start();
+	void start();
 
-	bool Server::sendTo(std::string response, std::vector<Player*> clients);
+	bool sendTo(std::string response, std::vector<Player*> clients);
 
 	Logic* getLogic();
 };

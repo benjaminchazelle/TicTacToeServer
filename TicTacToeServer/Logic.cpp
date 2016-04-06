@@ -38,8 +38,8 @@ typedef struct in_addr IN_ADDR;
 #include "Match.h"
 #include "QueryUtils.h"
 #include <string>
-#include "Query\RequestQuery.h"
-#include "Query\Request.h"
+#include "Query/RequestQuery.h"
+#include "Query/Request.h"
 
 #include <iostream>
 #include <sstream>

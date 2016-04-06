@@ -27,7 +27,7 @@ struct ParsedEntity{
 class QueryUtils
 {
 private:
-	static std::string QueryUtils::getLine(std::string &buffer);
+	static std::string getLine(std::string &buffer);
 public:
 
 	//static void nextLine(std::string &line);
@@ -36,7 +36,7 @@ public:
 	static ParsedEntity<std::string> getStringParsing(std::string &buffer);
 	static ParsedEntity<int> getIntParsing(std::string &buffer);
 	static ParsedEntity<bool> getBoolParsing(std::string &buffer);
-	static ParsedEntity<std::vector<std::string>> getPseudoPlayersParsing(std::string &buffer);
+	static ParsedEntity<std::vector<std::string> > getPseudoPlayersParsing(std::string &buffer);
 
 
 	static void headerBuilding(std::string &response);

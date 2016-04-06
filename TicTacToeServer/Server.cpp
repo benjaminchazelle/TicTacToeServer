@@ -71,7 +71,6 @@ void* Server::onClientTalk(void *_args) {
 	onClientTalkThreadArguments *args = (onClientTalkThreadArguments*)(_args);
 
 	int new_fd = args->socket;
-	struct sockaddr_in their_addr = args->addr;
 
 	std::cout << "Message from client #" << args->clientNumber << " : " << std::endl << args->buffer << std::endl;
 
@@ -139,7 +138,6 @@ void Server::start() {
 	struct sockaddr_in address;
 	char buffer[MAXDATASIZE]; 
 	fd_set readfds;
-	char message[] = "ECHO Daemon v1.0 \r\n";
 
 	std::vector<pthread_t*> threadCollection;
 

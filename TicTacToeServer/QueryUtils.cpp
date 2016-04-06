@@ -145,7 +145,7 @@ void QueryUtils::setValue(std::string &response, std::string key, int value) {
 void QueryUtils::setErrors(std::string &response, Errors errors) {
 
 	std::stringstream errorCode_stream;
-	errorCode_stream << errors.getErrorType() ;
+	errorCode_stream << errors.getErrorType() << "-" ;
 
 	std::vector<Error> errorsList = errors.getErrors();
 

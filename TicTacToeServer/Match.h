@@ -90,7 +90,7 @@ public:
 
 	Participant getWinner();
 
-	std::vector<Participant>::iterator Match::getNextParticipantPlayer(std::vector<Participant>::iterator fromParticipant);
+	std::vector<Participant>::iterator getNextParticipantPlayer(std::vector<Participant>::iterator fromParticipant);
 
 	bool canPlayerJoin(Player* player);
 
